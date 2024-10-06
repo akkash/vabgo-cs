@@ -5,7 +5,7 @@ import { supabase } from '@/utils/supabase/client'
 import { toast } from 'sonner';
 import GoogleMapSection from './GoogleMapSection';
 
-function ListingMapView({type}) {
+function ListingMapView() {
 
     const [listing,setListing]=useState([]);
     const [searchedAddress,setSearchedAddress]=useState();
@@ -29,7 +29,6 @@ function ListingMapView({type}) {
             listing_id
         )`)
         .eq('active',true)
-        .eq('type',type)
         .order('id',{ascending:false})
 
         if(data)
@@ -53,7 +52,6 @@ function ListingMapView({type}) {
             listing_id
         )`)
         .eq('active',true)
-        .eq('type',type)
         .gte('bedroom',bedCount)
         .gte('bathroom',bathCount)
         .gte('parking',parkingCount)
@@ -62,7 +60,7 @@ function ListingMapView({type}) {
 
         if(homeType)
         {
-            query=query.eq('propertyType',homeType)
+            query=query.eq('property_type',homeType)
         }
 
         const {data,error}=await query;

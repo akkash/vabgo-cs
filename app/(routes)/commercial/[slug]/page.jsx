@@ -15,7 +15,7 @@ function ViewListing({params}) {
         const {data,error}=await supabase
         .from('listing')
         .select('*,listingImages(url,listing_id)')
-        .eq('id',params.id)
+        .eq('slug',params.slug)
         .eq('active',true);
     
         if(data)
@@ -30,6 +30,7 @@ function ViewListing({params}) {
     }
   return (
     <div className='px-4 md:px-32 lg:px-56 py-5'>
+       
         <Slider imageList={listingDetail?.listingImages} />
         <Details listingDetail={listingDetail} />
     </div>

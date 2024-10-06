@@ -11,8 +11,8 @@ const containerStyle = {
 function GoogleMapSection({coordinates,listing}) {
    
     const [center,setCenter]=useState({
-        lat: 40.730610,
-        lng: -73.935242
+        lat: 11.342423,
+        lng: 77.728165
       })
       const [map, setMap] = useState(null)
     //   const { isLoaded } = useJsApiLoader({
@@ -44,7 +44,7 @@ function GoogleMapSection({coordinates,listing}) {
         <GoogleMap
         mapContainerStyle={containerStyle}
         center={center}
-        zoom={10}
+        zoom={13}
         onLoad={map=>setMap(map)}
         
         onUnmount={onUnmount}
