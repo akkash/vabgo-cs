@@ -1,4 +1,6 @@
-import React, { useState } from 'react'
+"use client"; // Ensure this is a Client Component
+
+import React, { useState, useRef, useEffect } from 'react'
 import {
     Carousel,
     CarouselContent,
@@ -7,8 +9,6 @@ import {
     CarouselPrevious,
 } from "@/components/ui/carousel"
 import Image from 'next/image'
-import { useRef } from 'react'
-import { useEffect } from 'react'
 
 function Slider({ imageList }) {
     const [currentIndex, setCurrentIndex] = useState(0)

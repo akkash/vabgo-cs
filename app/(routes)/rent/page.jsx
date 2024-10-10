@@ -1,5 +1,5 @@
 import ListingMapView from '@/app/_components/ListingMapView'
-import React from 'react'
+import * as React from 'react';
 
 function ForRent() {
   return (

@@ -1,6 +1,6 @@
 "use client"
 import { MapPin } from 'lucide-react';
-import React from 'react'
+import * as React from 'react';
 import GooglePlacesAutocomplete, { geocodeByAddress, getLatLng } from 'react-google-places-autocomplete'
 
 function GoogleAddressSearch({selectedAddress,setCoordinates}) {

@@ -16,26 +16,35 @@ import { Formik, Field } from 'formik'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/utils/supabase/client'
 import { toast } from 'sonner'
-import { useUser } from '@clerk/nextjs'
 import FileUpload from '../_components/FileUpload'
 import { Loader } from 'lucide-react'
 
 function EditListing({ params }) {
-    const { user } = useUser();
+    const [user, setUser] = useState(null);
     const router = useRouter();
     const [listing, setListing] = useState([]);
     const [images, setImages] = useState([]);
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        user && verifyUserRecord();
-    }, [user]);
+        const checkSession = async () => {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (session) {
+                setUser(session.user);
+                verifyUserRecord(session.user);
+            } else {
+                router.replace('/sign-in'); // Redirect to login if no session
+            }
+        };
 
-    const verifyUserRecord = async () => {
+        checkSession();
+    }, []);
+
+    const verifyUserRecord = async (user) => {
         const { data, error } = await supabase
             .from('listing')
             .select('*,listingImages(listing_id,url)')
-            .eq('createdBy', user?.primaryPhoneNumber.phoneNumber)
+            .eq('createdBy', user.id) // Use Supabase user ID instead of phone number
             .eq('id', params.id);
         if (data) {
             console.log(data)

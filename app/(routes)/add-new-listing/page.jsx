@@ -1,10 +1,10 @@
 "use client"
-import React, { useState } from 'react'
+import React, { useState , useEffect} from 'react'
 import GoogleAddressSearch from '@/app/_components/GoogleAddressSearch'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'  // Add this import
 import { supabase } from '@/utils/supabase/client';
-import { useUser } from '@clerk/nextjs';
+
 import { Loader } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
@@ -20,9 +20,18 @@ const LocationSchema = Yup.object().shape({
 });
 
 function AddNewListing() {
-    const { user } = useUser();
+    const [user, setUser] = useState(null);
     const [loader, setLoader] = useState(false);
     const router = useRouter();
+
+    useEffect(() => {
+        const fetchUser = async () => {
+            const { data: { user } } = await supabase.auth.getUser();
+            setUser(user);
+        };
+        fetchUser();
+    }, []);
+
 
     const nextHandler = async (values) => {
         setLoader(true);
@@ -38,7 +47,7 @@ function AddNewListing() {
                     address: values.address,
                     contactname: values.contactname,
                     coordinates: coordinates,
-                    createdBy: user?.primaryPhoneNumber.phoneNumber
+                    createdBy: user?.phone
                 },
             ])
             .select();

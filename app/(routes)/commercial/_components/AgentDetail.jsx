@@ -1,15 +1,53 @@
+"use client"; // Mark this component as a Client Component
+
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { Button } from '@/components/ui/button'
 import Image from 'next/image'
-import React, { useState } from 'react'
-import { useUser } from '@clerk/nextjs'
+import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+
+export async function getStaticPaths() {
+  // Fetch the list of listings to generate paths
+  const supabase = createClientComponentClient()
+  const { data: listings } = await supabase.from('listings').select('id')
+
+  const paths = listings.map(listing => ({
+    params: { id: listing.id.toString() }
+  }))
+
+  return { paths, fallback: false }
+}
+
+export async function getStaticProps({ params }) {
+  const supabase = createClientComponentClient()
+  const { data: listingDetail } = await supabase
+    .from('listings')
+    .select('*')
+    .eq('id', params.id)
+    .single()
+
+  return {
+    props: {
+      listingDetail
+    }
+  }
+}
 
 function AgentDetail({ listingDetail }) {
   const [showContact, setShowContact] = useState(false)
-  const { isSignedIn, user } = useUser()
+  const [isSignedIn, setIsSignedIn] = useState(false)
   const router = useRouter()
+  const supabase = createClientComponentClient()
 
-  const handleGetContact = () => {
+  useEffect(() => {
+    async function checkSession() {
+      const { data: { session } } = await supabase.auth.getSession()
+      setIsSignedIn(!!session)
+    }
+    checkSession()
+  }, [supabase.auth])
+
+  const handleGetContact = async () => {
     if (isSignedIn) {
       setShowContact(true)
     } else {

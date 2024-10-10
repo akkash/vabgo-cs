@@ -1,5 +1,5 @@
 "use client"
-import React from 'react'
+import * as React from 'react';
 import Header from './_components/Header'
 import { LoadScript } from '@react-google-maps/api'
 
