@@ -72,7 +72,7 @@ function ListingMapView() {
     }
   return (
     <div className="container mx-auto">
-      <div className="text-black py-10 md:py-20 px-4 mb-4 md:mb-8">
+      <div className="text-black py-10 md:py-20 mb-4 md:mb-8">
         <div className="container mx-auto text-center">
           <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-2 md:mb-4">
             Find Commercial Property On The Go
