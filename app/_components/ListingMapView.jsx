@@ -9,12 +9,11 @@ function ListingMapView() {
 
     const [listing,setListing]=useState([]);
     const [searchedAddress,setSearchedAddress]=useState();
-    const [bedCount,setBedCount]=useState(0);
-    const [bathCount,setBathCount]=useState(0);
-    const [parkingCount,setParkingCount]=useState(0);
-    const [homeType,setHomeType]=useState();
+    const [listingType,setListingType]=useState(0);
+    const [propertyType,setPropertyType]=useState(0);
+    const [subPropertyType,setSubPropertyType]=useState(0);
+    const [ageOfProperty,setAgeOfProperty]=useState();
     const [coordinates,setCoordinates]=useState();
-
 
 
     useEffect(()=>{
@@ -52,9 +51,10 @@ function ListingMapView() {
             listing_id
         )`)
         .eq('active',true)
-        .gte('bedroom',bedCount)
-        .gte('bathroom',bathCount)
-        .gte('parking',parkingCount)
+        .eq('listingType',listingType)
+        .eq('propertyType',propertyType)
+        .eq('subPropertyType',subPropertyType)
+        .eq('ageOfProperty',ageOfProperty)
         .like('address','%'+searchTerm+'%')
         .order('id',{ascending:false});
 
@@ -72,12 +72,12 @@ function ListingMapView() {
     }
   return (
     <div className="container mx-auto">
-      <div className="text-black py-10 md:py-20 px-4 mb-4 md:mb-8">
+      <div className="text-black py-6 md:py-10 px-4 mb-4 md:mb-8">
         <div className="container mx-auto text-center">
-          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-2 md:mb-4">
+          <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-2 md:mb-3 whitespace-nowrap overflow-hidden text-ellipsis">
             Find Commercial Property On The Go
           </h1>
-          <p className="text-lg md:text-xl lg:text-2xl text-blue-900">
+          <p className="text-base md:text-lg lg:text-xl text-blue-900 whitespace-nowrap overflow-hidden text-ellipsis">
             Discover the perfect space for your business
           </p>
         </div>
@@ -89,10 +89,10 @@ function ListingMapView() {
             listing={listing}
             handleSearchClick={handleSearchClick}
             searchedAddress={(v)=>setSearchedAddress(v)}
-            setBathCount={setBathCount}
-            setBedCount={setBedCount}
-            setParkingCount={setParkingCount}
-            setHomeType={setHomeType}
+            setListingType={setListingType}
+            setPropertyType={setPropertyType}
+            setSubPropertyType={setSubPropertyType}
+            setAgeOfProperty={setAgeOfProperty}
             setCoordinates={setCoordinates}
           />
         </div>

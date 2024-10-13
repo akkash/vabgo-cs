@@ -7,11 +7,11 @@ import FilterSection from './FilterSection'
 import Link from 'next/link'
 
 function Listing({listing,handleSearchClick,searchedAddress,
-    setBathCount,
-    setBedCount,
-    setParkingCount,
-    setHomeType,
-    setCoordinates
+    setListingType,
+    setPropertyType,
+    setSubPropertyType,
+    setAgeOfProperty,
+    setCoordinates,
 }) {
   const [address,setAddress]=useState();
   return (
@@ -29,10 +29,10 @@ function Listing({listing,handleSearchClick,searchedAddress,
         Search</Button>
         </div>
             <FilterSection
-            setBathCount={setBathCount}
-            setBedCount={setBedCount}
-            setParkingCount={setParkingCount}
-            setHomeType={setHomeType}
+            setListingType={setListingType}
+            setPropertyType={setPropertyType}
+            setSubPropertyType={setSubPropertyType}
+            setAgeOfProperty={setAgeOfProperty}
             />
 
         {address&&<div className='px-3 my-5'>
