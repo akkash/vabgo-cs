@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import Image from 'next/image'
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import {  MapPin } from 'lucide-react'
 
 export async function getStaticPaths() {
   // Fetch the list of listings to generate paths
@@ -57,6 +58,8 @@ function AgentDetail({ listingDetail, isSignedIn }) {
         <div>
           <h2 className='text-lg font-bold'>Contact Property Owner</h2>
           <h2 className='text-gray-500'>{listingDetail.contactname || 'Property Owner'}</h2>
+          <h2 className='text-gray-500 text-lg flex gap-2'>
+          Address <MapPin /> {listingDetail?.address}</h2>
         </div>
         {!showContact && (
           <Button onClick={handleGetContact}>

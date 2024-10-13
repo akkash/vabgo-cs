@@ -17,8 +17,6 @@ function Details({listingDetail}) {
             <h2 className='font-bold text-xl'>For : {listingDetail?.listing_type}</h2>
             <h2 className='font-bold text-xl'>Price : {listingDetail?.price}₹</h2>
             
-            <h2 className='text-gray-500 text-lg flex gap-2'>
-                Address <MapPin /> {listingDetail?.address}</h2>
         </div>
     </div>
 
