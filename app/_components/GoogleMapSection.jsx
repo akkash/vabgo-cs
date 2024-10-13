@@ -5,7 +5,7 @@ import MarkerItem from './MarkerItem';
 const containerStyle = {
     width: '100%',
     height: '80vh',
-    borderRadius:10
+    borderRadius:13
   };
   
 
