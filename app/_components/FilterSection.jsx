@@ -8,15 +8,17 @@ import {
   } from "@/components/ui/select"
 import { Store, Factory, LandPlot, Warehouse,ReceiptIndianRupee,Captions } from 'lucide-react'
   
-function FilterSection({setListingType,setPropertyType,setSubPropertyType,setAgeOfProperty}) {
+function FilterSection({setListingType, setPropertyType, setSubPropertyType, setAgeOfProperty}) {
   return (
-    <div className='px-3 py-2 grid grid-cols-2 
-    md:flex gap-2'>
+    <div className='px-3 py-2 flex flex-col gap-2'>
+
+      {/* Filters row */}
+      <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2'>
         <Select onValueChange={setListingType}>
-        <SelectTrigger className="w-[180px]">
+          <SelectTrigger className="w-full">
             <SelectValue placeholder="Listing Type" />
-        </SelectTrigger>
-        <SelectContent>
+          </SelectTrigger>
+          <SelectContent>
             <SelectItem value="Sell">
                 <h2 className='flex gap-2'>
                      <ReceiptIndianRupee className='h-5 w-5 text-primary'/>Sell</h2>
@@ -31,7 +33,7 @@ function FilterSection({setListingType,setPropertyType,setSubPropertyType,setAge
         </Select>
 
         <Select  onValueChange={setPropertyType}>
-        <SelectTrigger className="w-[180px]">
+        <SelectTrigger className="w-full">
             <SelectValue placeholder="Property Type" />
         </SelectTrigger>
         <SelectContent>
@@ -55,7 +57,7 @@ function FilterSection({setListingType,setPropertyType,setSubPropertyType,setAge
         </Select>
 
         <Select  onValueChange={setSubPropertyType}>
-        <SelectTrigger className="w-[180px]">
+        <SelectTrigger className="w-full">
             <SelectValue placeholder="Sub Property Type" />
         </SelectTrigger>
         <SelectContent>
@@ -109,7 +111,7 @@ function FilterSection({setListingType,setPropertyType,setSubPropertyType,setAge
         </Select>
         <Select  onValueChange={(value)=>value=='All'?
         setAgeOfProperty(null): setAgeOfProperty(value)}>
-        <SelectTrigger className="w-[180px]">
+        <SelectTrigger className="w-full">
             <SelectValue placeholder="Age of Property" />
         </SelectTrigger>
         <SelectContent>
@@ -133,6 +135,7 @@ function FilterSection({setListingType,setPropertyType,setSubPropertyType,setAge
         </SelectContent>
         </Select>
 
+      </div>
     </div>
   )
 }
