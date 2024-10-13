@@ -71,21 +71,22 @@ function ListingMapView() {
 
     }
   return (
-    <div>
-      <div className="text-black py-20 px-4 mb-8">
+    <div className="container mx-auto">
+      <div className="text-black py-10 md:py-20 px-4 mb-4 md:mb-8">
         <div className="container mx-auto text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-2 md:mb-4">
             Find Commercial Property On The Go
           </h1>
-          <p className="text-xl text-blue-900 md:text-2xl">
+          <p className="text-lg md:text-xl lg:text-2xl text-blue-900">
             Discover the perfect space for your business
           </p>
         </div>
       </div>
       
-      <div className='grid grid-cols-1 md:grid-cols-2 gap-8'>
-        <div>
-            <Listing listing={listing}
+      <div className='grid grid-cols-1 lg:grid-cols-2 gap-8'>
+        <div className="lg:col-span-1">
+          <Listing
+            listing={listing}
             handleSearchClick={handleSearchClick}
             searchedAddress={(v)=>setSearchedAddress(v)}
             setBathCount={setBathCount}
@@ -93,14 +94,13 @@ function ListingMapView() {
             setParkingCount={setParkingCount}
             setHomeType={setHomeType}
             setCoordinates={setCoordinates}
-            />
+          />
         </div>
-        <div className='fixed right-10 h-full 
-        md:w-[350px] lg:w-[450px] xl:w-[650px]'>
-            <GoogleMapSection
+        <div className='lg:col-span-1 h-[calc(100vh-200px)] sticky top-24'>
+          <GoogleMapSection
             listing={listing}
             coordinates={coordinates}
-            />
+          />
         </div>
       </div>
     </div>
