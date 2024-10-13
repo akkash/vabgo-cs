@@ -71,7 +71,19 @@ function ListingMapView() {
 
     }
   return (
-    <div className='grid grid-cols-1 md:grid-cols-2 gap-8'>
+    <div>
+      <div className="text-black py-20 px-4 mb-8">
+        <div className="container mx-auto text-center">
+          <h1 className="text-4xl md:text-5xl font-bold mb-4">
+            Find Commercial Property On The Go
+          </h1>
+          <p className="text-xl text-blue-900 md:text-2xl">
+            Discover the perfect space for your business
+          </p>
+        </div>
+      </div>
+      
+      <div className='grid grid-cols-1 md:grid-cols-2 gap-8'>
         <div>
             <Listing listing={listing}
             handleSearchClick={handleSearchClick}
@@ -90,6 +102,7 @@ function ListingMapView() {
             coordinates={coordinates}
             />
         </div>
+      </div>
     </div>
   )
 }
