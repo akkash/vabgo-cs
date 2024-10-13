@@ -58,8 +58,7 @@ function AgentDetail({ listingDetail, isSignedIn }) {
         <div>
           <h2 className='text-lg font-bold'>Contact Property Owner</h2>
           <h2 className='text-gray-500'>{listingDetail.contactname || 'Property Owner'}</h2>
-          <h2 className='text-gray-500 text-lg flex gap-2'>
-          Address <MapPin /> {listingDetail?.address}</h2>
+          
         </div>
         {!showContact && (
           <Button onClick={handleGetContact}>
@@ -71,6 +70,8 @@ function AgentDetail({ listingDetail, isSignedIn }) {
         <div className='mt-4'>
           <p className='font-semibold'>Contact Information:</p>
           <p>{listingDetail.contactname || 'Property Owner'}: {listingDetail.createdBy || 'Contact number not available'}</p>
+          <h2 className='text-gray-500 text-lg flex gap-2'>
+          Address <MapPin /> {listingDetail?.address}</h2>
         </div>
       )}
     </div>

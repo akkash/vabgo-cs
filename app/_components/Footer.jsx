@@ -17,7 +17,7 @@ const Footer = () => {
               <ul className="text-sm">
                 <li className="mb-2"><Link href="/" className="hover:text-blue-400">Home</Link></li>
                 <li className="mb-2"><Link href="/commercial" className="hover:text-blue-400">Listings</Link></li>
-                <li className="mb-2"><Link href="/about" className="hover:text-blue-400">About</Link></li>
+                <li className="mb-2"><Link href="/about-us" className="hover:text-blue-400">About</Link></li>
                 <li className="mb-2"><Link href="/contact" className="hover:text-blue-400">Contact</Link></li>
               </ul>
             </div>
@@ -33,16 +33,16 @@ const Footer = () => {
             <div>
               <h3 className="text-lg font-semibold mb-4">Follow Us</h3>
               <div className="flex space-x-4">
-                <a href="#" className="text-white hover:text-blue-400">
+                <a href="#" className="hover:text-blue-400">
                   <i className="fab fa-facebook-f"></i>
                 </a>
-                <a href="#" className="text-white hover:text-blue-400">
+                <a href="#" className="hover:text-blue-400">
                   <i className="fab fa-twitter"></i>
                 </a>
-                <a href="#" className="text-white hover:text-blue-400">
+                <a href="#" className="hover:text-blue-400">
                   <i className="fab fa-linkedin-in"></i>
                 </a>
-                <a href="#" className="text-white hover:text-blue-400">
+                <a href="#" className="hover:text-blue-400">
                   <i className="fab fa-instagram"></i>
                 </a>
               </div>
