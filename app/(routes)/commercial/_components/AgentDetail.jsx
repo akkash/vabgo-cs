@@ -18,7 +18,7 @@ export async function getStaticPaths() {
   return { paths, fallback: false }
 }
 
-export async function getStaticProps({ params }) {
+export async function getStaticProps({ params, req }) {
   const supabase = createClientComponentClient()
   const { data: listingDetail } = await supabase
     .from('listings')
@@ -26,26 +26,21 @@ export async function getStaticProps({ params }) {
     .eq('id', params.id)
     .single()
 
+  // Check session on the server side
+  const { data: { session } } = await supabase.auth.getSession(req)
+  
   return {
     props: {
-      listingDetail
+      listingDetail,
+      isSignedIn: !!session // Pass session state to props
     }
   }
 }
 
-function AgentDetail({ listingDetail }) {
+function AgentDetail({ listingDetail, isSignedIn }) {
   const [showContact, setShowContact] = useState(false)
-  const [isSignedIn, setIsSignedIn] = useState(false)
   const router = useRouter()
   const supabase = createClientComponentClient()
-
-  useEffect(() => {
-    async function checkSession() {
-      const { data: { session } } = await supabase.auth.getSession()
-      setIsSignedIn(!!session)
-    }
-    checkSession()
-  }, [supabase.auth])
 
   const handleGetContact = async () => {
     if (isSignedIn) {

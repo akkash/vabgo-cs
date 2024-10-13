@@ -10,11 +10,14 @@ const inter = Outfit({ subsets: ["latin"] });
 export const metadata = {
   title: "Vabgo - Commercial Properties",
   description: "Discover great local Commercial Properties",
+  icons: {
+    icon: '/favicon.ico', // Add this line
+  },
 };
 
 export default async function RootLayout({ children }) {
   // Move the supabase client creation inside the function
-  const supabase = createServerComponentClient({ cookies }); // This line needs to be updated
+  const supabase = createServerComponentClient({ cookies }); // Ensure cookies is passed correctly
 
   return (
     <html lang="en">
