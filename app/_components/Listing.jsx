@@ -1,4 +1,4 @@
-import { Bath, BedDouble, MapPin, Ruler, Search } from 'lucide-react'
+import {  MapPin, Search } from 'lucide-react'
 import Image from 'next/image'
 import React, { useState } from 'react'
 import GoogleAddressSearch from './GoogleAddressSearch'

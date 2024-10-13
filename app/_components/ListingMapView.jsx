@@ -58,10 +58,6 @@ function ListingMapView() {
         .like('address','%'+searchTerm+'%')
         .order('id',{ascending:false});
 
-        if(homeType)
-        {
-            query=query.eq('property_type',homeType)
-        }
 
         const {data,error}=await query;
         if(data)

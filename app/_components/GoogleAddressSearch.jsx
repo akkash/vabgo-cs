@@ -8,9 +8,6 @@ function GoogleAddressSearch({selectedAddress,setCoordinates}) {
     // Added flex-col for mobile and sm:flex-row for larger screens
     // Added gap-2 for spacing between elements
     <div className='flex flex-col sm:flex-row items-center w-full gap-2'>
-        {/* Adjusted MapPin size and made it full width on mobile */}
-        <MapPin className='h-10 w-full sm:w-10 p-2 rounded-lg sm:rounded-l-lg text-primary bg-blue-500'/>
-        {/* Wrapped GooglePlacesAutocomplete in a div for full width */}
         <div className="w-full">
           <GooglePlacesAutocomplete
                 apiKey={process.env.NEXT_PUBLIC_GOOGLE_PLACE_API_KEY}
