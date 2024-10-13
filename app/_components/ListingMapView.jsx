@@ -72,12 +72,12 @@ function ListingMapView() {
     }
   return (
     <div className="container mx-auto">
-      <div className="text-black py-10 md:py-20 mb-4 md:mb-8">
-        <div className="container mx-auto text-center">
-          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-2 md:mb-4">
+      <div className="text-black py-6 sm:py-8 md:py-10 lg:py-12 xl:py-16 mb-4 sm:mb-6 md:mb-8">
+        <div className="container mx-auto text-center px-4">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-2 sm:mb-3 md:mb-4">
             Find Commercial Property On The Go
           </h1>
-          <p className="text-lg md:text-xl lg:text-2xl text-blue-900">
+          <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-blue-900">
             Discover the perfect space for your business
           </p>
         </div>
