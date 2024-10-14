@@ -55,7 +55,7 @@ function Header() {
       </div>
       <div className='flex gap-2 items-center'>
         <Link href={'/add-new-listing'}>
-          <Button className="flex gap-2"><Plus className='h-5 w-5' /> Post Your Ad</Button>
+          <Button className="flex gap-2"><Plus className='h-5 w-5' /> List Your Property</Button>
         </Link>
         {user ? (
           <DropdownMenu>
