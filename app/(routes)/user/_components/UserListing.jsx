@@ -4,7 +4,7 @@ import { Bath, BedDouble, MapPin, Ruler, Trash } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react'
-import { useSession } from '@supabase/auth-helpers-react'
+import { useAuth } from '../../../contexts/AuthContext';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -19,20 +19,46 @@ import {
 import { toast } from 'sonner';
 
 function UserListing() {
-    const session = useSession();
+    const { user, loading } = useAuth();
     const [listing, setListing] = useState();
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        session && GetUserListing();
-    }, [session])
+        console.log('Auth state:', { user, loading });
+        if (user) {
+            console.log('User is logged in:', user);
+            getUserListing();
+        } else if (!loading) {
+            console.log('Not loading, but no user');
+            setIsLoading(false);
+        }
+    }, [user, loading])
 
-    const GetUserListing = async () => {
-        const { data, error } = await supabase
-            .from('listing')
-            .select(`*,listingImages(url,listing_id)`)
-            .eq('createdBy', session?.user?.phone);
-        setListing(data);
-        console.log(data);
+    const getUserListing = async () => {
+        setIsLoading(true);
+        try {
+            if (!user?.phone) {
+                toast.error('Unable to fetch listings: User information missing');
+                return;
+            }
+
+            const { data, error } = await supabase
+                .from('listing')
+                .select(`*,listingImages(url,listing_id)`)
+                .eq('createdBy', '+91' + user.phone);
+
+            if (error) throw error;
+
+            if (!data || data.length === 0) {
+                toast.info('No listings found');
+            } else {
+                setListing(data);
+            }
+        } catch (error) {
+            toast.error('Failed to fetch listings: ' + error.message);
+        } finally {
+            setIsLoading(false);
+        }
     }
 
     /**
@@ -52,82 +78,76 @@ function UserListing() {
             .eq('id', id);
 
         toast('Record deleted!');
-        GetUserListing();
+        getUserListing();
     }
 
     return (
         <div>
             <h2 className='font-bold text-2xl'>Manage your listing</h2>
-            <div className='grid grid-cols-1 md:grid-cols-2 gap-3'>
-                {listing && listing.map((item, index) => (
-                    <div key={index} className='p-3 hover:border hover:border-primary rounded-lg cursor-pointer'>
-                        <h2 className='bg-primary m-1 rounded-lg text-white absolute px-2 text-sm p-1'>{item.active ? 'Published' : 'Draft'}</h2>
-                        <Image src={item?.listingImages[0] ?
-                            item?.listingImages[0]?.url
-                            : '/placeholder.svg'
-                        }
-                            width={800}
-                            height={150}
-                            alt={`Listing ${index + 1}`}
-                            className='rounded-lg object-cover h-[170px]'
-                        />
-                        <div className='flex mt-2 flex-col gap-2'>
-                            <h2 className='font-bold text-xl'>${item?.price}</h2>
-                            <h2 className='flex gap-2 text-sm text-gray-400 '>
-                                <MapPin className='h-4 w-4' />
-                                {item.address}</h2>
-                            <div className='flex gap-2 mt-2 justify-between'>
-                                <h2 className='flex gap-2 text-sm bg-slate-200 
-                         rounded-md p-2 w-full text-gray-500 justify-center items-center'>
-                                    <BedDouble className='h-4 w-4' />
-                                    {item?.bedroom}
-                                </h2>
-                                <h2 className='flex gap-2 text-sm bg-slate-200 
-                         rounded-md p-2 w-full text-gray-500 justify-center items-center'>
-                                    <Bath className='h-4 w-4' />
-                                    {item?.bathroom}
-                                </h2>
-                                <h2 className='flex gap-2 w-full text-sm bg-slate-200 
-                         rounded-md p-2 text-gray-500 justify-center items-center'>
-                                    <Ruler className='h-4 w-4' />
-                                    {item?.area}
-                                </h2>
-                            </div>
-                            <div className='flex gap-2 justify-between'>
-                                <Link href={'/view-listing/' + item.id} className="w-full">
-                                    <Button size="sm" variant="outline">
-                                        View</Button>
-                                </Link>
-                                <Link href={'/edit-listing/' + item.id} className="w-full">
-                                    <Button size="sm" className="w-full">Edit</Button>
-                                </Link>
+            {isLoading ? (
+                <p>Loading your listings...</p>
+            ) : !user ? (
+                <>
+                    <p>Please log in to view your listings.</p>
+                    <p>Debug: user = {JSON.stringify(user)}, loading = {loading.toString()}</p>
+                </>
+            ) : listing && listing.length > 0 ? (
+                <div className='grid grid-cols-1 md:grid-cols-2 gap-3'>
+                    {listing.map((item, index) => (
+                        <div key={index} className='p-3 hover:border hover:border-primary rounded-lg cursor-pointer'>
+                            <h2 className='bg-primary m-1 rounded-lg text-white absolute px-2 text-sm p-1'>{item.active ? 'Published' : 'Draft'}</h2>
+                            <Image src={item?.listingImages[0] ?
+                                item?.listingImages[0]?.url
+                                : '/placeholder.svg'
+                            }
+                                width={800}
+                                height={150}
+                                alt={`Listing ${index + 1}`}
+                                className='rounded-lg object-cover h-[170px]'
+                            />
+                            <div className='flex mt-2 flex-col gap-2'>
+                                <h2 className='font-bold text-xl'>${item?.property_title}</h2>
+                                <h2 className='flex gap-2 text-sm text-gray-400 '>
+                                    <MapPin className='h-4 w-4' />
+                                    {item.price}</h2>
+                                <div className='flex gap-2 justify-between'>
+                                    <Link href={'/commercial/' + item.property_title} className="w-full">
+                                        <Button size="sm" variant="outline">
+                                            View</Button>
+                                    </Link>
+                                    <Link href={'/edit-listing/' + item.id} className="w-full">
+                                        <Button size="sm" className="w-full">Edit</Button>
+                                    </Link>
 
-                                <AlertDialog>
-                                    <AlertDialogTrigger asChild>
-                                        <Button size="sm" variant="destructive" className="w-full">
-                                            <Trash />
-                                        </Button>
-                                    </AlertDialogTrigger>
-                                    <AlertDialogContent>
-                                        <AlertDialogHeader>
-                                            <AlertDialogTitle>Ready to Delete?</AlertDialogTitle>
-                                            <AlertDialogDescription>
-                                                Do you really want to Delete the listing?
-                                            </AlertDialogDescription>
-                                        </AlertDialogHeader>
-                                        <AlertDialogFooter>
-                                            <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                            <AlertDialogAction onClick={() => deleteListing(item.id)} >
-                                                Continue
-                                            </AlertDialogAction>
-                                        </AlertDialogFooter>
-                                    </AlertDialogContent>
-                                </AlertDialog>
+                                    <AlertDialog>
+                                        <AlertDialogTrigger asChild>
+                                            <Button size="sm" variant="destructive" className="w-full">
+                                                <Trash />
+                                            </Button>
+                                        </AlertDialogTrigger>
+                                        <AlertDialogContent>
+                                            <AlertDialogHeader>
+                                                <AlertDialogTitle>Ready to Delete?</AlertDialogTitle>
+                                                <AlertDialogDescription>
+                                                    Do you really want to Delete the listing?
+                                                </AlertDialogDescription>
+                                            </AlertDialogHeader>
+                                            <AlertDialogFooter>
+                                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                                <AlertDialogAction onClick={() => deleteListing(item.id)} >
+                                                    Continue
+                                                </AlertDialogAction>
+                                            </AlertDialogFooter>
+                                        </AlertDialogContent>
+                                    </AlertDialog>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                ))}
-            </div>
+                    ))}
+                </div>
+            ) : (
+                <p>You don't have any listings yet.</p>
+            )}
         </div>
     )
 }

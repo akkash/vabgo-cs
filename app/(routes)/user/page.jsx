@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
-import { Building2 } from 'lucide-react'
+import { Building2, LogOut, Mail } from 'lucide-react'
 import UserListing from './_components/UserListing'
 
 function User() {
@@ -30,15 +30,27 @@ function User() {
   if (!user) return null
 
   return (
-    <div className='my-6 md:px-10 lg:px-32 w-full'>
-      <h2 className='font-bold text-2xl py-3'>Profile</h2>
-      <div>
-        <p>Email: {user.email}</p>
-        <button onClick={handleSignOut}>Sign Out</button>
+    <div className='max-w-4xl mx-auto my-6 px-4 sm:px-6 lg:px-8'>
+      <h2 className='font-bold text-3xl mb-6'>Welcome, {user.phone}</h2>
+      <div className='bg-white shadow rounded-lg p-6 mb-6'>
+        <h3 className='font-semibold text-xl mb-4'>Profile Information</h3>
+        <div className='flex items-center mb-4'>
+          <Mail className='h-5 w-5 mr-2 text-gray-500' />
+          <p>{user.phone}</p>
+        </div>
+        <button
+          onClick={handleSignOut}
+          className='flex items-center px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors'
+        >
+          <LogOut className='h-5 w-5 mr-2' />
+          Sign Out
+        </button>
       </div>
-      <div>
-        <h3 className='font-bold text-xl py-2'>My Listing</h3>
-        <Building2 className='h-5 w-5' />
+      <div className='bg-white shadow rounded-lg p-6'>
+        <h3 className='font-semibold text-xl mb-4 flex items-center'>
+          <Building2 className='h-6 w-6 mr-2 text-gray-500' />
+          My Listing
+        </h3>
         <UserListing />
       </div>
     </div>

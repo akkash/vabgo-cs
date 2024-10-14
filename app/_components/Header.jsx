@@ -4,7 +4,7 @@ import { Plus } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import {
   DropdownMenu,
@@ -14,28 +14,25 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { useAuth } from '../contexts/AuthContext'
 
 function Header() {
   const path = usePathname();
   const router = useRouter();
-  const [user, setUser] = useState(null);
-  const [supabase, setSupabase] = useState(null);
-
-  useEffect(() => {
-    const client = createClientComponentClient();
-    setSupabase(client);
-    
-    const getUser = async () => {
-      const { data: { user } } = await client.auth.getUser()
-      setUser(user)
-    }
-    getUser()
-  }, [])
+  const { user } = useAuth();
+  const supabase = createClientComponentClient();
 
   const handleSignOut = async () => {
-    await supabase.auth.signOut()
-    setUser(null)
-    router.push('/')
+    await supabase.auth.signOut();
+    router.push('/');
+  }
+
+  const handleListProperty = () => {
+    if (user) {
+      router.push('/add-new-listing');
+    } else {
+      router.push('/sign-in');
+    }
   }
 
   return (
@@ -54,9 +51,9 @@ function Header() {
         </ul>
       </div>
       <div className='flex gap-2 items-center'>
-        <Link href={'/add-new-listing'}>
-          <Button className="flex gap-2"><Plus className='h-5 w-5' /> List Your Property</Button>
-        </Link>
+        <Button className="flex gap-2" onClick={handleListProperty}>
+          <Plus className='h-5 w-5' /> List Your Property
+        </Button>
         {user ? (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>

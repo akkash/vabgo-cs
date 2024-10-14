@@ -39,8 +39,8 @@ export default function Page() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-gray-100 py-2">
-      <main className="flex w-full flex-1 flex-col items-center justify-center px-20 text-center">
+    <section className="min-h-screen flex items-center justify-center bg-cover bg-center" style={{backgroundImage: "url('/warehouse.jpg')"}}>
+      <div className="bg-white bg-opacity-80 p-8 rounded-lg shadow-lg max-w-md w-full">
         <h1 className="text-4xl font-bold mb-8">Sign Up</h1>
         {!showOtpInput ? (
           <form onSubmit={handleSendOtp} className="w-full max-w-md">
@@ -83,7 +83,7 @@ export default function Page() {
             Sign in
           </a>
         </p>
-      </main>
-    </div>
+      </div>
+    </section>
   )
 }
