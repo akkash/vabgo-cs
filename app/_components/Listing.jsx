@@ -17,15 +17,16 @@ function Listing({listing,handleSearchClick,searchedAddress,
   return (
     <div>
       <div className='mb-4'>
-        <div className='p-3 flex gap-6'>
+        <div className='p-3 flex flex-col sm:flex-row gap-3 sm:gap-6'>
           <GoogleAddressSearch
             selectedAddress={(v) => {
               searchedAddress(v);
               setAddress(v);
             }}
             setCoordinates={setCoordinates}
+            className="w-full sm:w-auto"
           />
-          <Button className="flex gap-2" onClick={handleSearchClick}>
+          <Button className="flex gap-2 w-full sm:w-auto justify-center" onClick={handleSearchClick}>
             <Search className='h-4 w-4'/> 
             Search
           </Button>
