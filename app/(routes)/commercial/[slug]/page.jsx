@@ -9,7 +9,7 @@ export default async function ViewListing({ params }) {
   const { user, supabase } = useAuth();
 
   if (!user) {
-    return <div>Please log in to view this listing</div>
+    throw new Error("User not logged in. Please log in to view this listing.");
   }
 
   const { data: listing, error } = await supabase
