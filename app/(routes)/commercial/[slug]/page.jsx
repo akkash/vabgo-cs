@@ -8,9 +8,7 @@ import ClientDetails from '../_components/ClientDetails';
 export default async function ViewListing({ params }) {
   const { user, supabase } = useAuth();
 
-  if (!user) {
-    return <div>Please log in to view this listing</div>
-  }
+
 
   const { data: listing, error } = await supabase
     .from('listing')
