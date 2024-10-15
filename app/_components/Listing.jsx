@@ -32,6 +32,7 @@ function Listing({listing,handleSearchClick,searchedAddress,
         </div>
       </div>
 
+      {/*
       <div className='mb-4'>
         <FilterSection
           setListingType={setListingType}
@@ -40,7 +41,7 @@ function Listing({listing,handleSearchClick,searchedAddress,
           setAgeOfProperty={setAgeOfProperty}
         />
       </div>
-
+*/}
       {address&&<div className='px-3 my-5'>
          <h2 className='text-xl'>
          Found  <span className='font-bold'>{listing?.length}</span> Result in <span className='text-primary font-bold'>{address?.label}</span></h2> 
