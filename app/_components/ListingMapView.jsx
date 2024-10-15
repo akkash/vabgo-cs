@@ -4,8 +4,12 @@ import Listing from './Listing'
 import { supabase } from '@/utils/supabase/client'
 import { toast } from 'sonner';
 import GoogleMapSection from './GoogleMapSection';
+import { useAuth } from '@/app/contexts/AuthContext'; // Update this import
+import { Button } from '@/components/ui/button'; // Add this import at the top of the file
+import { useRouter } from 'next/navigation'; // Add this import at the top of the file
 
 function ListingMapView() {
+    const router = useRouter(); // Add this line inside the component
 
     const [listing,setListing]=useState([]);
     const [searchedAddress,setSearchedAddress]=useState();
@@ -14,11 +18,15 @@ function ListingMapView() {
     const [subPropertyType,setSubPropertyType]=useState(0);
     const [ageOfProperty,setAgeOfProperty]=useState();
     const [coordinates,setCoordinates]=useState();
-
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const { user, loading } = useAuth(); // Use the useAuth hook
 
     useEffect(()=>{
         getLatestListing();
-    },[])
+        if (!loading) {
+            setIsLoggedIn(!!user);
+        }
+    },[user, loading])
 
     const getLatestListing=async()=>{
         const {data,error}=await supabase
@@ -92,12 +100,27 @@ function ListingMapView() {
             setCoordinates={setCoordinates}
           />
         </div>
-        <div className='lg:col-span-1 h-[calc(100vh-200px)] sticky top-24'>
-          <GoogleMapSection
-            listing={listing}
-            coordinates={coordinates}
-          />
-        </div>
+        {!loading && (
+          isLoggedIn ? (
+            <div className='lg:col-span-1 h-[calc(100vh-200px)] sticky top-24'>
+              <GoogleMapSection
+                listing={listing}
+                coordinates={coordinates}
+              />
+            </div>
+          ) : (
+            <div className='lg:col-span-1 h-[calc(100vh-200px)] sticky top-24 flex items-center justify-center bg-gray-100 rounded-lg'>
+              <div className='text-center'>
+                <p className='text-lg text-gray-600 mb-4'>
+                  Please log in to access the Map View feature
+                </p>
+                <Button variant="outline" onClick={() => router.push('/sign-in')}>
+                  Login
+                </Button>
+              </div>
+            </div>
+          )
+        )}
       </div>
     </div>
   )

@@ -14,37 +14,33 @@ import { Textarea } from '@/components/ui/textarea'
 import { Input } from '@/components/ui/input'
 import { Formik, Field } from 'formik'
 import { useRouter } from 'next/navigation'
-import { supabase } from '@/utils/supabase/client'
 import { toast } from 'sonner'
 import FileUpload from '../_components/FileUpload'
 import { Loader } from 'lucide-react'
+import { useAuth } from '../../../contexts/AuthContext'
 
 function EditListing({ params }) {
-    const [user, setUser] = useState(null);
+    const { user, supabase, loading: authLoading } = useAuth();
     const router = useRouter();
     const [listing, setListing] = useState([]);
     const [images, setImages] = useState([]);
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        const checkSession = async () => {
-            const { data: { session } } = await supabase.auth.getSession();
-            if (session) {
-                setUser(session.user);
-                verifyUserRecord(session.user);
-            } else {
-                router.replace('/sign-in'); // Redirect to login if no session
-            }
-        };
+        if (authLoading) return; // Wait for auth to be checked
 
-        checkSession();
-    }, []);
+        if (!user) {
+            router.replace('/sign-in');
+        } else {
+            verifyUserRecord(user);
+        }
+    }, [user, authLoading]);
 
     const verifyUserRecord = async (user) => {
         const { data, error } = await supabase
             .from('listing')
             .select('*,listingImages(listing_id,url)')
-            .eq('createdBy', user.id) // Use Supabase user ID instead of phone number
+            .eq('createdBy', user.id)
             .eq('id', params.id);
         if (data) {
             console.log(data)
@@ -142,6 +138,15 @@ function EditListing({ params }) {
 
     };
 
+    if (authLoading) {
+        return <div>Loading...</div>; // Or a more sophisticated loading component
+    }
+
+    if (!user) {
+        return null; // The useEffect will handle the redirect
+    }
+
+    // Rest of your component remains the same...
     return (
         <div className='px-10 md:px-36 my-10'>
             <h2 className='font-bold text-2xl'>Enter some more details about your listing</h2>

@@ -4,6 +4,7 @@ import GoogleAddressSearch from '@/app/_components/GoogleAddressSearch'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'  // Add this import
 import { supabase } from '@/utils/supabase/client';
+import { useAuth } from '../../contexts/AuthContext'
 
 import { Loader } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -20,18 +21,9 @@ const LocationSchema = Yup.object().shape({
 });
 
 function AddNewListing() {
-    const [user, setUser] = useState(null);
+    const { user } = useAuth();  // Use the useAuth hook
     const [loader, setLoader] = useState(false);
     const router = useRouter();
-
-    useEffect(() => {
-        const fetchUser = async () => {
-            const { data: { user } } = await supabase.auth.getUser();
-            setUser(user);
-        };
-        fetchUser();
-    }, []);
-
 
     const nextHandler = async (values) => {
         setLoader(true);

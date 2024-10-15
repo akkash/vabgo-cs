@@ -1,12 +1,15 @@
-
+import React from 'react'
 import GoogleMapSection from '@/app/_components/GoogleMapSection'
 import { Button } from '@/components/ui/button'
-import { Bath,SquareParking,ArrowUpFromDot,Droplet,ShowerHead,ShieldBan, BatteryFull, CarFront, Drill, Home, LandPlot, MapPin, Share } from 'lucide-react'
-
-import React from 'react'
+import { Bath, SquareParking, ArrowUpFromDot, Droplet, ShowerHead, ShieldBan, BatteryFull, CarFront, Drill, Home, LandPlot, MapPin, Share } from 'lucide-react'
 import AgentDetail from './AgentDetail'
+import { useAuth } from '@/app/contexts/AuthContext'
+import { useRouter } from 'next/navigation'
 
 function Details({listingDetail}) {
+  const { user } = useAuth();
+  const router = useRouter();
+
   return listingDetail&&(
     <div className='my-6 flex gap-2 flex-col'>
         <h2 className='font-bold text-3xl '>{listingDetail?.property_title}</h2>
@@ -98,10 +101,17 @@ function Details({listingDetail}) {
 
     <div>
         <h2 className='font-bold text-2xl '>Find On Map</h2>
-        <GoogleMapSection
-        coordinates={listingDetail.coordinates}
-        listing={[listingDetail]}
-        />
+        {user ? (
+          <GoogleMapSection
+            coordinates={listingDetail.coordinates}
+            listing={[listingDetail]}
+          />
+        ) : (
+          <div className="bg-gray-100 p-4 rounded-lg text-center">
+            <p className="text-primary mb-2">Please log in to have access to this Map View feature</p>
+            <Button variant="outline" onClick={() => router.push('/sign-in')}>Log In</Button>
+          </div>
+        )}
     </div>
 
 </div>

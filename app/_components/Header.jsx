@@ -5,7 +5,6 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import React from 'react'
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,8 +18,7 @@ import { useAuth } from '../contexts/AuthContext'
 function Header() {
   const path = usePathname();
   const router = useRouter();
-  const { user } = useAuth();
-  const supabase = createClientComponentClient();
+  const { user, supabase } = useAuth();
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
