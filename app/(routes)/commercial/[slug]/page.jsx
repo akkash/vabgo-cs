@@ -1,11 +1,17 @@
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
-import { cookies } from 'next/headers'
+"use client";
+
+import { useAuth } from '../../../contexts/AuthContext'
+
 import Slider from '../_components/Slider';
 import ClientDetails from '../_components/ClientDetails';
 
 export default async function ViewListing({ params }) {
-  const supabase = createServerComponentClient({ cookies })
-  
+  const { user, supabase } = useAuth();
+
+  if (!user) {
+    return <div>Please log in to view this listing</div>
+  }
+
   const { data: listing, error } = await supabase
     .from('listing')
     .select('*,listingImages(url,listing_id)')

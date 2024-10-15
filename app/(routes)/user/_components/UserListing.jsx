@@ -1,3 +1,5 @@
+'use client'; // Ensure this component is treated as a client component
+
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/utils/supabase/client'
 import { Bath, BedDouble, MapPin, Ruler, Trash } from 'lucide-react';
