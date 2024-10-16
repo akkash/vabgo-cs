@@ -22,32 +22,53 @@ import { useAuth } from '../../../contexts/AuthContext'
 function EditListing({ params }) {
     const { user, supabase, loading: authLoading } = useAuth();
     const router = useRouter();
-    const [listing, setListing] = useState([]);
+    const [listing, setListing] = useState(null);
     const [images, setImages] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        if (authLoading) return; // Wait for auth to be checked
+        console.log("Auth state:", { user, authLoading });
+        
+        if (authLoading) {
+            console.log("Auth is still loading...");
+            return;
+        }
 
         if (!user) {
+            console.log("No user detected, redirecting to sign-in...");
             router.replace('/sign-in');
         } else {
+            console.log("User detected, verifying user record...");
             verifyUserRecord(user);
         }
-    }, [user, authLoading]);
+    }, [user, authLoading, router]);
 
     const verifyUserRecord = async (user) => {
-        const { data, error } = await supabase
-            .from('listing')
-            .select('*,listingImages(listing_id,url)')
-            .eq('createdBy', user.id)
-            .eq('id', params.id);
-        if (data) {
-            console.log(data)
-            setListing(data[0]);
-        }
-        if (data?.length <= 0) {
-            router.replace('/')
+        console.log("Verifying user record for:", user.id);
+        setIsLoading(true);
+        try {
+            const { data, error } = await supabase
+                .from('listing')
+                .select('*,listingImages(listing_id,url)')
+                .eq('createdBy', user.id)
+                .eq('id', params.id)
+                .single();
+
+            if (error) throw error;
+
+            if (data) {
+                console.log("Listing data retrieved:", data);
+                setListing(data);
+            } else {
+                console.log("No listing found, redirecting to home...");
+                router.replace('/');
+            }
+        } catch (error) {
+            console.error("Error verifying user record:", error);
+            toast.error("Error loading listing data");
+        } finally {
+            setIsLoading(false);
         }
     }
 
@@ -138,12 +159,12 @@ function EditListing({ params }) {
 
     };
 
-    if (authLoading) {
-        return <div>Loading...</div>; // Or a more sophisticated loading component
+    if (isLoading) {
+        return <div>Loading...</div>;
     }
 
     if (!user) {
-        return null; // The useEffect will handle the redirect
+        return <div>Redirecting to sign in...</div>;
     }
 
     // Rest of your component remains the same...
@@ -514,7 +535,7 @@ function EditListing({ params }) {
                                 <h2 className='font-lg text-gray-500 my-2'>Upload Property Images</h2>
                                 <FileUpload
                                     setImages={(value) => setImages(value)}
-                                    imageList={listing.listingImages}
+                                    imageList={listing?.listingImages || []}
                                 />
                             </div>
                             <div className='flex gap-7 justify-end'>
