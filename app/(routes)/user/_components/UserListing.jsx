@@ -47,7 +47,7 @@ function UserListing() {
             const { data, error } = await supabase
                 .from('listing')
                 .select(`*,listingImages(url,listing_id)`)
-                .eq('createdBy', '+91' + user.phone);
+                .eq('createdBy', user.phone);
 
             if (error) throw error;
 
