@@ -21,9 +21,61 @@ const LocationSchema = Yup.object().shape({
 });
 
 function AddNewListing() {
+    console.log("Google Maps API Key:", process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY);
     const { user } = useAuth();  // Use the useAuth hook
     const [loader, setLoader] = useState(false);
     const router = useRouter();
+
+    useEffect(() => {
+        // Load Google Maps API script
+        const script = document.createElement('script');
+        script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&libraries=places`;
+        script.async = true;
+        script.defer = true;
+        document.head.appendChild(script);
+
+        return () => {
+            document.head.removeChild(script);
+        };
+    }, []);
+
+    const getCityAndLocalityFromCoordinates = async (lat, lng) => {
+        return new Promise((resolve, reject) => {
+            if (!window.google || !window.google.maps) {
+                reject("Google Maps API not loaded");
+                return;
+            }
+
+            const geocoder = new window.google.maps.Geocoder();
+            const latlng = { lat: parseFloat(lat), lng: parseFloat(lng) };
+
+            geocoder.geocode({ location: latlng }, (results, status) => {
+                if (status === "OK") {
+                    console.log("Geocoding results:", results);
+                    let city = "";
+                    let locality = "";
+
+                    if (results[0]) {
+                        for (let result of results) {
+                            for (let component of result.address_components) {
+                                if (component.types.includes("administrative_area_level_3")) {
+                                    city = component.long_name;
+                                }
+                                if (component.types.includes("administrative_area_level_4")) {
+                                    locality = component.long_name;
+                                }
+                                if (city && locality) break;
+                            }
+                            if (city && locality) break;
+                        }
+                    }
+                    resolve({ city, locality });
+                } else {
+                    reject("Geocoder failed due to: " + status);
+                }
+            });
+        });
+    };
 
     const nextHandler = async (values) => {
         setLoader(true);
@@ -32,28 +84,44 @@ function AddNewListing() {
             lng: parseFloat(values.longitude)
         };
 
-        const { data, error } = await supabase
-            .from('listing')
-            .insert([
-                {
-                    address: values.address,
-                    contactname: values.contactname,
-                    coordinates: coordinates,
-                    createdBy: user?.phone
-                },
-            ])
-            .select();
+        try {
+            let cityData = { city: "", locality: "" };
+            try {
+                cityData = await getCityAndLocalityFromCoordinates(coordinates.lat, coordinates.lng);
+            } catch (geocodeError) {
+                console.error('Error getting city and locality:', geocodeError);
+                // Continue with empty city if geocoding fails
+            }
 
-        if (data) {
+            const { data, error } = await supabase
+                .from('listing')
+                .insert([
+                    {
+                        address: values.address,
+                        contactname: values.contactname,
+                        coordinates: coordinates,
+                        createdBy: user?.phone,
+                        city: cityData.city,
+                        locality: cityData.locality
+                    },
+                ])
+                .select();
+
+            if (data) {
+                setLoader(false);
+                console.log("New Data added,", data);
+                toast.success("New Address added for listing");
+                router.replace('/edit-listing/' + data[0].id);
+            }
+            if (error) {
+                setLoader(false);
+                console.log('Error', error);
+                toast.error("Server side error");
+            }
+        } catch (error) {
             setLoader(false);
-            console.log("New Data added,", data);
-            toast.success("New Address added for listing");
-            router.replace('/edit-listing/' + data[0].id);
-        }
-        if (error) {
-            setLoader(false);
-            console.log('Error', error);
-            toast.error("Server side error");
+            console.log('Error:', error);
+            toast.error("An error occurred while adding the listing");
         }
     };
 

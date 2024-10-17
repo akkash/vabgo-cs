@@ -51,11 +51,14 @@ function EditListing({ params }) {
             const { data, error } = await supabase
                 .from('listing')
                 .select('*,listingImages(listing_id,url)')
-                .eq('createdBy', user.id)
+                .eq('createdBy', user.phone)
                 .eq('id', params.id)
                 .single();
 
-            if (error) throw error;
+            if (error) {
+                console.error("Supabase query error:", error);
+                throw error;
+            }
 
             if (data) {
                 console.log("Listing data retrieved:", data);
@@ -66,6 +69,7 @@ function EditListing({ params }) {
             }
         } catch (error) {
             console.error("Error verifying user record:", error);
+            console.error("Error details:", JSON.stringify(error, null, 2));
             toast.error("Error loading listing data");
         } finally {
             setIsLoading(false);
@@ -81,7 +85,7 @@ function EditListing({ params }) {
             return ;
         }
 
-        const newTitle = `${formValue.build_up_area} sqft for ${formValue.listing_type} ${formValue.sub_property_type} in ${formValue.city}`;
+        const newTitle = `${formValue.build_up_area} sqft for ${formValue.listing_type} ${formValue.sub_property_type} Area ${formValue.locality} in ${formValue.city}`;
         const slug = newTitle.toLowerCase().replace(/[^a-z0-9]+/g, '-').trim() + '-' + Date.now();
         const shouldUpdateSlug = formValue.slug === null || slug !== formValue.slug;
 
@@ -176,6 +180,7 @@ function EditListing({ params }) {
                 initialValues={{
                     listing_type: listing?.listing_type || '',
                     city: listing?.city || '',
+                    locality: listing?.locality || '',
                     property_type: listing?.property_type || '',
                     sub_property_type: listing?.sub_property_type || '',
                     location_type: listing?.location_type || '',
@@ -234,6 +239,13 @@ function EditListing({ params }) {
                                     <Input type="text" placeholder="Erode"
                                             onChange={handleChange}
                                             defaultValue={listing?.city} name="city" />
+                                </div>
+
+                                <div className='flex gap-2 flex-col'   >
+                                    <h2 className='text-gray-500'>Locality</h2>
+                                    <Input type="text" placeholder="Erode"
+                                            onChange={handleChange}
+                                            defaultValue={listing?.locality} name="locality" />
                                 </div>
                                 
                                 <div className='flex gap-2 flex-col'>

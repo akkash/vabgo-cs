@@ -40,13 +40,6 @@ function Header() {
           <Image src={'/logo.svg'} width={150}
             height={150} alt='logo' />
         </Link>
-        <ul className='hidden md:flex gap-10'>
-          <Link href={'/'} >
-            <li className={`'hover:text-primary 
-                 font-medium text-sm cursor-pointer'
-                 ${path == '/' && 'text-primary'}`}>Commercial Property</li>
-          </Link>
-        </ul>
       </div>
       <div className='flex gap-2 items-center'>
         <Button className="flex gap-2" onClick={handleListProperty}>
