@@ -1,24 +1,43 @@
-"use client";
-
-import { useAuth } from '../../../contexts/AuthContext'
-
+import { createClient } from '@supabase/supabase-js';
 import Slider from '../_components/Slider';
 import ClientDetails from '../_components/ClientDetails';
+import { notFound } from 'next/navigation';
 
-export default async function ViewListing({ params }) {
-  const { user, supabase } = useAuth();
-
-
+async function getListing(slug) {
+  const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
 
   const { data: listing, error } = await supabase
     .from('listing')
     .select('*,listingImages(url,listing_id)')
-    .eq('slug', params.slug)
+    .eq('slug', slug)
     .eq('active', true)
-    .single()
+    .single();
 
   if (error || !listing) {
-    return <div>Error fetching listing</div>
+    return null;
+  }
+
+  return listing;
+}
+
+export async function generateStaticParams() {
+  const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
+
+  const { data: listings } = await supabase
+    .from('listing')
+    .select('slug')
+    .eq('active', true);
+
+  return listings.map((listing) => ({
+    slug: listing.slug,
+  }));
+}
+
+export default async function ViewListing({ params }) {
+  const listing = await getListing(params.slug);
+
+  if (!listing) {
+    notFound();
   }
 
   return (
@@ -26,5 +45,10 @@ export default async function ViewListing({ params }) {
       <Slider imageList={listing.listingImages} />
       <ClientDetails listingDetail={listing} />
     </div>
-  )
+  );
+}
+
+export async function generateMetadata({ params }) {
+  const listing = await getListing(params.slug);
+  return { title: listing ? listing.title : 'Listing Not Found' };
 }
