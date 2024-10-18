@@ -23,14 +23,21 @@ async function getListing(slug) {
 export async function generateStaticParams() {
   const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
 
-  const { data: listings } = await supabase
-    .from('listing')
-    .select('slug')
-    .eq('active', true);
+  try {
+    const { data: listings, error } = await supabase
+      .from('listing')
+      .select('slug')
+      .eq('active', true);
 
-  return listings.map((listing) => ({
-    slug: listing.slug,
-  }));
+    if (error) throw error;
+
+    return listings.map((listing) => ({
+      slug: String(listing.slug), // Ensure slug is a string
+    }));
+  } catch (error) {
+    console.error('Error generating static params:', error);
+    return []; // Return an empty array if there's an error
+  }
 }
 
 export default async function ViewListing({ params }) {
