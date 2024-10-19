@@ -3,9 +3,13 @@ const nextConfig = {
     output: 'export',
     distDir: 'out',
     images:{
-        unoptimized:true,
-        domains:['mafekvxxizlcavhbkybi.supabase.co']
+        unoptimized:false,
+        domains:['mafekvxxizlcavhbkybi.supabase.co'],
+        loader: 'default',
+        path: '/_next/image'
     },
+    reactStrictMode: true,
+    poweredByHeader: false,
 };
 
 export default nextConfig;
