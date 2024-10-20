@@ -50,13 +50,20 @@ function Listing({listing,handleSearchClick,searchedAddress,
       </div>}
       <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
           {listing?.length>0? listing.map((item,index)=>item?.listingImages[0]?.url&&(
-             <Link href={'/commercial/'+item?.slug}>
+             <Link href={'/commercial/'+item?.slug} key={index}>
              <div className='p-3 hover:border hover:border-primary rounded-lg cursor-pointer'>
-                  <Image src={item?.listingImages[0]?.url}
-                  width={800}
-                  height={150}
-                  className='rounded-lg object-cover h-[170px]'
-                  />
+                  <div className='relative'>
+                      <Image
+                          src={item?.listingImages[0]?.url}
+                          width={800}
+                          height={150}
+                          className='rounded-lg object-cover h-[170px]'
+                          alt={item.property_title}
+                      />
+                      <div className='absolute bottom-0 center-2 bg-primary text-white px-4 py-1 rounded text-sm'>
+                          {item.property_title}
+                      </div>
+                  </div>
                   <div className='flex mt-2 flex-col gap-2'>
                       
                       <h2 className='flex gap-2 text-xl'>
