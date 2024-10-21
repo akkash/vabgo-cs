@@ -60,6 +60,9 @@ function Listing({listing,handleSearchClick,searchedAddress,
                           className='rounded-lg object-cover h-[170px]'
                           alt={item.property_title}
                       />
+                      <div className='absolute top-2 left-2 bg-primary text-white px-2 py-1 rounded text-sm'>
+                          {item.listing_type}
+                      </div>
                       <div className='absolute bottom-0 center-2 bg-primary text-white px-4 py-1 rounded text-sm'>
                           {item.property_title}
                       </div>
