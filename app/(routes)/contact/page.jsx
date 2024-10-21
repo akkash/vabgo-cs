@@ -11,17 +11,17 @@ export default function ContactPage() {
           <h2 className="text-2xl font-semibold mb-4">Our Address</h2>
           <p className="mb-2 flex items-center">
             <MapPin className="mr-2" size={18} />
-            123 Main Street, City, State 12345, Country
+            Tirupur,Tamil Nadu,India 638071
           </p>
           
           <h2 className="text-2xl font-semibold mt-6 mb-4">Contact Information</h2>
           <p className="mb-2 flex items-center">
             <Mail className="mr-2" size={18} />
-            info@yourcompany.com
+            mail@vabgo.com
           </p>
           <p className="mb-2 flex items-center">
             <Phone className="mr-2" size={18} />
-            +1 (123) 456-7890
+            +91 96776-02828
           </p>
         </div>
         

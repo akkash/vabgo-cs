@@ -27,7 +27,7 @@ const Footer = () => {
                 <li className="mb-2">Vabgo</li>
                 <li className="mb-2">Tirupur 638701</li>
                 <li className="mb-2">Phone: +91-96776-02828</li>
-                <li className="mb-2">Email: info@vabgo.com</li>
+                <li className="mb-2">Email: mail@vabgo.com</li>
               </ul>
             </div>
             <div>
