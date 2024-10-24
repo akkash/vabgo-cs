@@ -66,8 +66,7 @@ function AgentDetail({ listingDetail }) {
           {listingDetail.createdBy && (
             <p>
               <span className="font-semibold">WhatsApp: </span>
-              <a href={`https://api.whatsapp.com/send?phone=${listingDetail.createdBy}&text=Hi%20${listingDetail.contactname}%20%0A%0AI%20want%20to%20know%20more%20about%20this%20${listingDetail.sub_property_type}%20listing%3A%20https%3A%2F%2Fwww.vabgo.com/commercial/${listingDetail.slug}%20for%20${listingDetail.listing_type}%20in%20${listingDetail.locality}%20,%20${listingDetail.city}`}className="text-blue-600 hover:underline flex items-center">
-                <span>Chat on WhatsApp</span>
+              <a href={`https://api.whatsapp.com/send?phone=${listingDetail.createdBy}&text=Hi%20${listingDetail.contactname}%20%0A%0AI%20want%20to%20know%20more%20about%20this%20${listingDetail.sub_property_type}%20listing%3A%20https%3A%2F%2Fwww.vabgo.com/commercial/${listingDetail.slug}%20for%20${listingDetail.listing_type}%20in%20${listingDetail.locality}%20,%20${listingDetail.city}`}className="text-blue-600 hover:underline flex items-center"><span>Chat on WhatsApp</span>
               </a>
             </p>
           )}
