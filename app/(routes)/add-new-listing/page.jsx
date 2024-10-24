@@ -16,8 +16,8 @@ import * as Yup from 'yup';
 const LocationSchema = Yup.object().shape({
     contactname: Yup.string().required('Contact Name is required'),
     address: Yup.string().required('Address is required'),
-    latitude: Yup.string().required('Latitude is required'),
-    longitude: Yup.string().required('Longitude is required'),
+    latitude: Yup.string().nullable(),
+    longitude: Yup.string().nullable(),
 });
 
 function AddNewListing() {
@@ -79,18 +79,24 @@ function AddNewListing() {
 
     const nextHandler = async (values) => {
         setLoader(true);
-        const coordinates = {
-            lat: parseFloat(values.latitude),
-            lng: parseFloat(values.longitude)
-        };
+        let coordinates = null;
+
+        if (values.latitude && values.longitude) {
+            coordinates = {
+                lat: parseFloat(values.latitude),
+                lng: parseFloat(values.longitude)
+            };
+        }
 
         try {
             let cityData = { city: "", locality: "" };
-            try {
-                cityData = await getCityAndLocalityFromCoordinates(coordinates.lat, coordinates.lng);
-            } catch (geocodeError) {
-                console.error('Error getting city and locality:', geocodeError);
-                // Continue with empty city if geocoding fails
+            if (coordinates) {
+                try {
+                    cityData = await getCityAndLocalityFromCoordinates(coordinates.lat, coordinates.lng);
+                } catch (geocodeError) {
+                    console.error('Error getting city and locality:', geocodeError);
+                    // Continue with empty city if geocoding fails
+                }
             }
 
             const { data, error } = await supabase
@@ -169,7 +175,7 @@ function AddNewListing() {
                             </div>
 
                             <div className='mb-4'>
-                                <label htmlFor="latitude" className='block text-sm font-medium text-gray-700'>Latitude</label>
+                                <label htmlFor="latitude" className='block text-sm font-medium text-gray-700'>Latitude (optional)</label>
                                 <Field
                                     name="latitude"
                                     type="text"
@@ -180,7 +186,7 @@ function AddNewListing() {
                             </div>
 
                             <div className='mb-4'>
-                                <label htmlFor="longitude" className='block text-sm font-medium text-gray-700'>Longitude</label>
+                                <label htmlFor="longitude" className='block text-sm font-medium text-gray-700'>Longitude (optional)</label>
                                 <Field
                                     name="longitude"
                                     type="text"
