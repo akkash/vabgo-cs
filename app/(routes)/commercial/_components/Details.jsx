@@ -1,7 +1,7 @@
 import React from 'react'
 import GoogleMapSection from '@/app/_components/GoogleMapSection'
 import { Button } from '@/components/ui/button'
-import { Bath, SquareParking, ArrowUpFromDot, Droplet, ShowerHead, ShieldBan, BatteryFull, CarFront, Drill, Home, LandPlot, MapPin, Share } from 'lucide-react'
+import { Bath, SquareParking, ArrowUpFromDot, Droplet, ShowerHead, ShieldBan, BatteryFull, CarFront, Drill, Home, LandPlot, MapPin, Share, Eye } from 'lucide-react'
 import AgentDetail from './AgentDetail'
 import { useAuth } from '@/app/contexts/AuthContext'
 import { useRouter } from 'next/navigation'
@@ -98,6 +98,26 @@ function Details({listingDetail}) {
             </h2>
         </div>
     </div> 
+
+    <hr></hr>
+    <div className='mt-4'>
+        <h2 className='font-bold text-2xl mb-3'>Property Views</h2>
+        <div className='bg-blue-100 rounded-lg p-4'>
+            <div className='flex items-center justify-between mb-2'>
+                <span className='text-primary font-semibold flex items-center gap-2'>
+                    <Eye className='text-primary' size={20} />
+                    Total Views
+                </span>
+                <span className='text-2xl font-bold text-primary'>{listingDetail.view_count}</span>
+            </div>
+            <div className='w-full bg-blue-200 rounded-full h-2.5'>
+                <div 
+                    className='bg-primary h-2.5 rounded-full' 
+                    style={{width: `${Math.min((listingDetail.view_count / 1000) * 100, 100)}%`}}
+                ></div>
+            </div>
+        </div>
+    </div>
 
     <div>
         <h2 className='font-bold text-2xl '>Find On Map</h2>
