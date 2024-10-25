@@ -6,6 +6,7 @@ import { notFound } from 'next/navigation';
 async function getListing(slug) {
   const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
 
+  // First, fetch the listing
   const { data: listing, error } = await supabase
     .from('listing')
     .select('*,listingImages(url,listing_id)')
@@ -17,7 +18,18 @@ async function getListing(slug) {
     return null;
   }
 
-  return listing;
+  // Increment the view_count
+  const { error: updateError } = await supabase
+    .from('listing')
+    .update({ view_count: listing.view_count + 1 })
+    .eq('id', listing.id);
+
+  if (updateError) {
+    console.error('Error updating view count:', updateError);
+  }
+
+  // Return the listing with updated view_count
+  return { ...listing, view_count: listing.view_count + 1 };
 }
 
 export async function generateStaticParams() {
