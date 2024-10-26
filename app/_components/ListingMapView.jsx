@@ -88,18 +88,6 @@ function ListingMapView() {
       </div>
       
       <div className='grid grid-cols-1 lg:grid-cols-2 gap-8'>
-        <div className="lg:col-span-1">
-          <Listing
-            listing={listing}
-            handleSearchClick={handleSearchClick}
-            searchedAddress={(v)=>setSearchedAddress(v)}
-            setListingType={setListingType}
-            setPropertyType={setPropertyType}
-            setSubPropertyType={setSubPropertyType}
-            setAgeOfProperty={setAgeOfProperty}
-            setCoordinates={setCoordinates}
-          />
-        </div>
         {!loading && (
           isLoggedIn ? (
             <div className='lg:col-span-1 h-[calc(100vh-200px)] sticky top-24'>
@@ -121,6 +109,18 @@ function ListingMapView() {
             </div>
           )
         )}
+        <div className="lg:col-span-1">
+          <Listing
+            listing={listing}
+            handleSearchClick={handleSearchClick}
+            searchedAddress={(v)=>setSearchedAddress(v)}
+            setListingType={setListingType}
+            setPropertyType={setPropertyType}
+            setSubPropertyType={setSubPropertyType}
+            setAgeOfProperty={setAgeOfProperty}
+            setCoordinates={setCoordinates}
+          />
+        </div>
       </div>
     </div>
   )
