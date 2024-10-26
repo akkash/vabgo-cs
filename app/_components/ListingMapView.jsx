@@ -93,37 +93,48 @@ function ListingMapView() {
                 </div>
             </div>
             
-            <div className='mb-4'>
-                <Button onClick={toggleView} className="w-full">
-                    {showMap ? 'Hide Map' : 'Show Map'}
-                </Button>
-            </div>
-
-            <div className='flex flex-col lg:flex-row gap-8'>
-                <div className={`w-full lg:w-1/2 ${showMap ? 'block' : 'hidden'}`}>
-                    {!loading && (
-                        isLoggedIn ? (
-                            <div className='h-[300px] lg:h-[calc(100vh-280px)] lg:sticky lg:top-24'>
-                                <GoogleMapSection
-                                    listing={listing}
-                                    coordinates={coordinates}
-                                />
-                            </div>
-                        ) : (
-                            <div className='h-[300px] lg:h-[calc(100vh-280px)] lg:sticky lg:top-24 flex items-center justify-center bg-gray-100 rounded-lg'>
-                                <div className='text-center'>
-                                    <p className='text-lg text-gray-600 mb-4'>
-                                        Please log in to access the Map View feature
-                                    </p>
-                                    <Button variant="outline" onClick={() => router.push('/sign-in')}>
-                                        Login
+            <div className={`flex ${showMap ? 'flex-col lg:flex-row' : 'flex-col'} gap-8`}>
+                {showMap && (
+                    <div className="w-full lg:w-1/2">
+                        {!loading && (
+                            isLoggedIn ? (
+                                <div className='h-[300px] lg:h-[calc(100vh-280px)] lg:sticky lg:top-24 relative'>
+                                    <Button 
+                                        onClick={toggleView} 
+                                        className="absolute top-2 right-2 z-10"
+                                    >
+                                        Hide Map
                                     </Button>
+                                    <GoogleMapSection
+                                        listing={listing}
+                                        coordinates={coordinates}
+                                    />
                                 </div>
-                            </div>
-                        )
+                            ) : (
+                                <div className='h-[300px] lg:h-[calc(100vh-280px)] lg:sticky lg:top-24 flex items-center justify-center bg-gray-100 rounded-lg'>
+                                    <div className='text-center'>
+                                        <p className='text-lg text-gray-600 mb-4'>
+                                            Please log in to access the Map View feature
+                                        </p>
+                                        <Button variant="outline" onClick={() => router.push('/sign-in')}>
+                                            Login
+                                        </Button>
+                                    </div>
+                                </div>
+                            )
+                        )}
+                    </div>
+                )}
+                <div className={`w-full ${showMap ? 'lg:w-1/2' : ''}`}>
+                    {!showMap && (
+                        <Button 
+                            onClick={toggleView} 
+                            className="mb-4 float-right"
+                            size="sm"
+                        >
+                            Show Map
+                        </Button>
                     )}
-                </div>
-                <div className={`w-full ${showMap ? 'lg:w-1/2' : 'lg:w-full'}`}>
                     <Listing
                         listing={listing}
                         handleSearchClick={handleSearchClick}
