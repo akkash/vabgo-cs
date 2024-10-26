@@ -75,7 +75,7 @@ function ListingMapView() {
 
     }
   return (
-    <div className="container mx-auto">
+    <div className="container mx-auto px-4">
       <div className="text-black py-6 sm:py-8 md:py-10 lg:py-12 xl:py-16 mb-4 sm:mb-6 md:mb-8">
         <div className="container mx-auto text-center px-4">
           <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-2 sm:mb-3 md:mb-4">
@@ -87,29 +87,31 @@ function ListingMapView() {
         </div>
       </div>
       
-      <div className='flex flex-col lg:grid lg:grid-cols-2 gap-8'>
-        {!loading && (
-          isLoggedIn ? (
-            <div className='order-1 lg:order-none h-[300px] lg:h-[calc(100vh-200px)] lg:sticky lg:top-24'>
-              <GoogleMapSection
-                listing={listing}
-                coordinates={coordinates}
-              />
-            </div>
-          ) : (
-            <div className='order-1 lg:order-none h-[300px] lg:h-[calc(100vh-200px)] lg:sticky lg:top-24 flex items-center justify-center bg-gray-100 rounded-lg'>
-              <div className='text-center'>
-                <p className='text-lg text-gray-600 mb-4'>
-                  Please log in to access the Map View feature
-                </p>
-                <Button variant="outline" onClick={() => router.push('/sign-in')}>
-                  Login
-                </Button>
+      <div className='flex flex-col lg:flex-row gap-8'>
+        <div className='w-full lg:w-1/2 order-1'>
+          {!loading && (
+            isLoggedIn ? (
+              <div className='h-[300px] lg:h-[calc(100vh-200px)] lg:sticky lg:top-24'>
+                <GoogleMapSection
+                  listing={listing}
+                  coordinates={coordinates}
+                />
               </div>
-            </div>
-          )
-        )}
-        <div className="order-2 lg:order-none">
+            ) : (
+              <div className='h-[300px] lg:h-[calc(100vh-200px)] lg:sticky lg:top-24 flex items-center justify-center bg-gray-100 rounded-lg'>
+                <div className='text-center'>
+                  <p className='text-lg text-gray-600 mb-4'>
+                    Please log in to access the Map View feature
+                  </p>
+                  <Button variant="outline" onClick={() => router.push('/sign-in')}>
+                    Login
+                  </Button>
+                </div>
+              </div>
+            )
+          )}
+        </div>
+        <div className="w-full lg:w-1/2 order-2">
           <Listing
             listing={listing}
             handleSearchClick={handleSearchClick}
