@@ -4,12 +4,12 @@ import Listing from './Listing'
 import { supabase } from '@/utils/supabase/client'
 import { toast } from 'sonner';
 import GoogleMapSection from './GoogleMapSection';
-import { useAuth } from '@/app/contexts/AuthContext'; // Update this import
-import { Button } from '@/components/ui/button'; // Add this import at the top of the file
-import { useRouter } from 'next/navigation'; // Add this import at the top of the file
+import { useAuth } from '@/app/contexts/AuthContext';
+import { Button } from '@/components/ui/button';
+import { useRouter } from 'next/navigation';
 
 function ListingMapView() {
-    const router = useRouter(); // Add this line inside the component
+    const router = useRouter();
 
     const [listing,setListing]=useState([]);
     const [searchedAddress,setSearchedAddress]=useState();
@@ -19,7 +19,8 @@ function ListingMapView() {
     const [ageOfProperty,setAgeOfProperty]=useState();
     const [coordinates,setCoordinates]=useState();
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const { user, loading } = useAuth(); // Use the useAuth hook
+    const { user, loading } = useAuth();
+    const [showMap, setShowMap] = useState(true);
 
     useEffect(()=>{
         getLatestListing();
@@ -74,58 +75,69 @@ function ListingMapView() {
         }
 
     }
-  return (
-    <div className="container mx-auto px-4">
-      <div className="text-black py-6 sm:py-8 md:py-10 lg:py-12 xl:py-16 mb-4 sm:mb-6 md:mb-8">
-        <div className="container mx-auto text-center px-4">
-          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-2 sm:mb-3 md:mb-4">
-            Find Commercial Property On The Go
-          </h1>
-          <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-blue-900">
-            Discover the perfect space for your business
-          </p>
-        </div>
-      </div>
-      
-      <div className='flex flex-col lg:flex-row gap-8'>
-        <div className='w-full lg:w-1/2 order-1'>
-          {!loading && (
-            isLoggedIn ? (
-              <div className='h-[300px] lg:h-[calc(100vh-200px)] lg:sticky lg:top-24'>
-                <GoogleMapSection
-                  listing={listing}
-                  coordinates={coordinates}
-                />
-              </div>
-            ) : (
-              <div className='h-[300px] lg:h-[calc(100vh-200px)] lg:sticky lg:top-24 flex items-center justify-center bg-gray-100 rounded-lg'>
-                <div className='text-center'>
-                  <p className='text-lg text-gray-600 mb-4'>
-                    Please log in to access the Map View feature
-                  </p>
-                  <Button variant="outline" onClick={() => router.push('/sign-in')}>
-                    Login
-                  </Button>
+
+    const toggleView = () => {
+        setShowMap(!showMap);
+    };
+
+    return (
+        <div className="container mx-auto px-4">
+            <div className="text-black py-6 sm:py-8 md:py-10 lg:py-12 xl:py-16 mb-4 sm:mb-6 md:mb-8">
+                <div className="container mx-auto text-center px-4">
+                    <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-2 sm:mb-3 md:mb-4">
+                        Find Commercial Property On The Go
+                    </h1>
+                    <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-blue-900">
+                        Discover the perfect space for your business
+                    </p>
                 </div>
-              </div>
-            )
-          )}
+            </div>
+            
+            <div className='lg:hidden mb-4'>
+                <Button onClick={toggleView} className="w-full">
+                    {showMap ? 'Show Listings' : 'Show Map'}
+                </Button>
+            </div>
+
+            <div className='flex flex-col lg:flex-row gap-8'>
+                <div className={`w-full lg:w-1/2 ${showMap ? 'block' : 'hidden'} lg:block`}>
+                    {!loading && (
+                        isLoggedIn ? (
+                            <div className='h-[300px] lg:h-[calc(100vh-200px)] lg:sticky lg:top-24'>
+                                <GoogleMapSection
+                                    listing={listing}
+                                    coordinates={coordinates}
+                                />
+                            </div>
+                        ) : (
+                            <div className='h-[300px] lg:h-[calc(100vh-200px)] lg:sticky lg:top-24 flex items-center justify-center bg-gray-100 rounded-lg'>
+                                <div className='text-center'>
+                                    <p className='text-lg text-gray-600 mb-4'>
+                                        Please log in to access the Map View feature
+                                    </p>
+                                    <Button variant="outline" onClick={() => router.push('/sign-in')}>
+                                        Login
+                                    </Button>
+                                </div>
+                            </div>
+                        )
+                    )}
+                </div>
+                <div className={`w-full lg:w-1/2 ${showMap ? 'hidden' : 'block'} lg:block`}>
+                    <Listing
+                        listing={listing}
+                        handleSearchClick={handleSearchClick}
+                        searchedAddress={(v)=>setSearchedAddress(v)}
+                        setListingType={setListingType}
+                        setPropertyType={setPropertyType}
+                        setSubPropertyType={setSubPropertyType}
+                        setAgeOfProperty={setAgeOfProperty}
+                        setCoordinates={setCoordinates}
+                    />
+                </div>
+            </div>
         </div>
-        <div className="w-full lg:w-1/2 order-2">
-          <Listing
-            listing={listing}
-            handleSearchClick={handleSearchClick}
-            searchedAddress={(v)=>setSearchedAddress(v)}
-            setListingType={setListingType}
-            setPropertyType={setPropertyType}
-            setSubPropertyType={setSubPropertyType}
-            setAgeOfProperty={setAgeOfProperty}
-            setCoordinates={setCoordinates}
-          />
-        </div>
-      </div>
-    </div>
-  )
+    )
 }
 
 export default ListingMapView
