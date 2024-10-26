@@ -93,15 +93,15 @@ function ListingMapView() {
                 </div>
             </div>
             
-            <div className={`flex ${showMap ? 'flex-col lg:flex-row' : 'flex-col'} gap-8`}>
+            <div className={`flex flex-col lg:flex-row gap-8 relative`}>
                 {showMap && (
-                    <div className="w-full lg:w-1/2">
+                    <div className="w-full lg:w-1/2 lg:sticky lg:top-24 h-[600px] lg:h-[calc(100vh-600px)]">
                         {!loading && (
                             isLoggedIn ? (
-                                <div className='h-[300px] lg:h-[calc(100vh-280px)] lg:sticky lg:top-24 relative'>
+                                <div className='relative h-full'>
                                     <Button 
                                         onClick={toggleView} 
-                                        className="absolute top-2 right-2 z-10"
+                                        className="absolute top-2 right-2 z-20"
                                     >
                                         Hide Map
                                     </Button>
@@ -111,7 +111,7 @@ function ListingMapView() {
                                     />
                                 </div>
                             ) : (
-                                <div className='h-[300px] lg:h-[calc(100vh-280px)] lg:sticky lg:top-24 flex items-center justify-center bg-gray-100 rounded-lg'>
+                                <div className='h-[600px] lg:h-[calc(100vh-600px)] lg:sticky lg:top-24 flex items-center justify-center bg-gray-100 rounded-lg'>
                                     <div className='text-center'>
                                         <p className='text-lg text-gray-600 mb-4'>
                                             Please log in to access the Map View feature
@@ -125,7 +125,7 @@ function ListingMapView() {
                         )}
                     </div>
                 )}
-                <div className={`w-full ${showMap ? 'lg:w-1/2' : ''}`}>
+                <div className={`w-full lg:w-1/2 ${showMap ? 'lg:static absolute top-[300px] left-0 right-0 bg-white z-10' : ''}`}>
                     {!showMap && (
                         <Button 
                             onClick={toggleView} 
