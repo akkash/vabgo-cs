@@ -87,17 +87,17 @@ function ListingMapView() {
         </div>
       </div>
       
-      <div className='grid grid-cols-1 lg:grid-cols-2 gap-8'>
+      <div className='flex flex-col lg:grid lg:grid-cols-2 gap-8'>
         {!loading && (
           isLoggedIn ? (
-            <div className='lg:col-span-1 h-[300px] lg:h-[calc(100vh-200px)] lg:sticky lg:top-24 mb-8 lg:mb-0'>
+            <div className='order-1 lg:order-none h-[300px] lg:h-[calc(100vh-200px)] lg:sticky lg:top-24'>
               <GoogleMapSection
                 listing={listing}
                 coordinates={coordinates}
               />
             </div>
           ) : (
-            <div className='lg:col-span-1 h-[300px] lg:h-[calc(100vh-200px)] lg:sticky lg:top-24 mb-8 lg:mb-0 flex items-center justify-center bg-gray-100 rounded-lg'>
+            <div className='order-1 lg:order-none h-[300px] lg:h-[calc(100vh-200px)] lg:sticky lg:top-24 flex items-center justify-center bg-gray-100 rounded-lg'>
               <div className='text-center'>
                 <p className='text-lg text-gray-600 mb-4'>
                   Please log in to access the Map View feature
@@ -109,7 +109,7 @@ function ListingMapView() {
             </div>
           )
         )}
-        <div className="lg:col-span-1">
+        <div className="order-2 lg:order-none">
           <Listing
             listing={listing}
             handleSearchClick={handleSearchClick}
