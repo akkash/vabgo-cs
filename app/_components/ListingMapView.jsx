@@ -81,7 +81,7 @@ function ListingMapView() {
     };
 
     return (
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-4 pb-16">
             <div className="text-black py-6 sm:py-8 md:py-10 lg:py-12 xl:py-16 mb-4 sm:mb-6 md:mb-8">
                 <div className="container mx-auto text-center px-4">
                     <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-2 sm:mb-3 md:mb-4">
@@ -93,24 +93,24 @@ function ListingMapView() {
                 </div>
             </div>
             
-            <div className='lg:hidden mb-4'>
+            <div className='mb-4'>
                 <Button onClick={toggleView} className="w-full">
-                    {showMap ? 'Show Listings' : 'Show Map'}
+                    {showMap ? 'Hide Map' : 'Show Map'}
                 </Button>
             </div>
 
             <div className='flex flex-col lg:flex-row gap-8'>
-                <div className={`w-full lg:w-1/2 ${showMap ? 'block' : 'hidden'} lg:block`}>
+                <div className={`w-full lg:w-1/2 ${showMap ? 'block' : 'hidden'}`}>
                     {!loading && (
                         isLoggedIn ? (
-                            <div className='h-[300px] lg:h-[calc(100vh-200px)] lg:sticky lg:top-24'>
+                            <div className='h-[300px] lg:h-[calc(100vh-280px)] lg:sticky lg:top-24'>
                                 <GoogleMapSection
                                     listing={listing}
                                     coordinates={coordinates}
                                 />
                             </div>
                         ) : (
-                            <div className='h-[300px] lg:h-[calc(100vh-200px)] lg:sticky lg:top-24 flex items-center justify-center bg-gray-100 rounded-lg'>
+                            <div className='h-[300px] lg:h-[calc(100vh-280px)] lg:sticky lg:top-24 flex items-center justify-center bg-gray-100 rounded-lg'>
                                 <div className='text-center'>
                                     <p className='text-lg text-gray-600 mb-4'>
                                         Please log in to access the Map View feature
@@ -123,7 +123,7 @@ function ListingMapView() {
                         )
                     )}
                 </div>
-                <div className={`w-full lg:w-1/2 ${showMap ? 'hidden' : 'block'} lg:block`}>
+                <div className={`w-full ${showMap ? 'lg:w-1/2' : 'lg:w-full'}`}>
                     <Listing
                         listing={listing}
                         handleSearchClick={handleSearchClick}
