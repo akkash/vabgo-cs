@@ -11,69 +11,64 @@ import { useRouter } from 'next/navigation';
 function ListingMapView() {
     const router = useRouter();
 
-    const [listing,setListing]=useState([]);
-    const [searchedAddress,setSearchedAddress]=useState();
-    const [listingType,setListingType]=useState(0);
-    const [propertyType,setPropertyType]=useState(0);
-    const [subPropertyType,setSubPropertyType]=useState(0);
-    const [ageOfProperty,setAgeOfProperty]=useState();
-    const [coordinates,setCoordinates]=useState();
+    const [listing, setListing] = useState([]);
+    const [searchedAddress, setSearchedAddress] = useState();
+    const [listingType, setListingType] = useState(0);
+    const [propertyType, setPropertyType] = useState(0);
+    const [subPropertyType, setSubPropertyType] = useState(0);
+    const [ageOfProperty, setAgeOfProperty] = useState();
+    const [coordinates, setCoordinates] = useState();
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const { user, loading } = useAuth();
     const [showMap, setShowMap] = useState(true);
 
-    useEffect(()=>{
+    useEffect(() => {
         getLatestListing();
         if (!loading) {
             setIsLoggedIn(!!user);
         }
-    },[user, loading])
+    }, [user, loading])
 
-    const getLatestListing=async()=>{
-        const {data,error}=await supabase
-        .from('listing')
-        .select(`*,listingImages(
-            url,
-            listing_id
-        )`)
-        .eq('active',true)
-        .order('id',{ascending:false})
+    const getLatestListing = async () => {
+        const { data, error } = await supabase
+            .from('listing')
+            .select(`*,listingImages(
+                url,
+                listing_id
+            )`)
+            .eq('active', true)
+            .order('id', { ascending: false })
 
-        if(data)
-        {
+        if (data) {
             setListing(data);
         }
-        if(error)
-        {
+        if (error) {
             toast('Server Side Error')
         }
     }
 
-    const handleSearchClick=async()=>{
+    const handleSearchClick = async () => {
         console.log(searchedAddress);
-        const searchTerm=searchedAddress?.value?.structured_formatting?.main_text
-        
-        let query =  supabase
-        .from('listing')
-        .select(`*,listingImages(
-            url,
-            listing_id
-        )`)
-        .eq('active',true)
-        .eq('listingType',listingType)
-        .eq('propertyType',propertyType)
-        .eq('subPropertyType',subPropertyType)
-        .eq('ageOfProperty',ageOfProperty)
-        .like('address','%'+searchTerm+'%')
-        .order('id',{ascending:false});
+        const searchTerm = searchedAddress?.value?.structured_formatting?.main_text
 
+        let query = supabase
+            .from('listing')
+            .select(`*,listingImages(
+                url,
+                listing_id
+            )`)
+            .eq('active', true)
+            .eq('listingType', listingType)
+            .eq('propertyType', propertyType)
+            .eq('subPropertyType', subPropertyType)
+            .eq('ageOfProperty', ageOfProperty)
+            .like('address', '%' + searchTerm + '%')
+            .order('id', { ascending: false });
 
-        const {data,error}=await query;
-        if(data)
-        {
+        const { data, error } = await query;
+        if (data) {
             setListing(data);
         }
-
     }
 
     const toggleView = () => {
@@ -138,7 +133,7 @@ function ListingMapView() {
                     <Listing
                         listing={listing}
                         handleSearchClick={handleSearchClick}
-                        searchedAddress={(v)=>setSearchedAddress(v)}
+                        searchedAddress={(v) => setSearchedAddress(v)}
                         setListingType={setListingType}
                         setPropertyType={setPropertyType}
                         setSubPropertyType={setSubPropertyType}
