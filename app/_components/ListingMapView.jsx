@@ -82,7 +82,7 @@ function ListingMapView() {
     };
 
     return (
-        <div className="container mx-auto px-4 pb-16">
+        <div className="container mx-auto px-4 min-h-screen pb-24">
             <div className="text-black py-6 sm:py-8 md:py-10 lg:py-12 xl:py-16 mb-4 sm:mb-6 md:mb-8">
                 <div className="container mx-auto text-center px-4">
                     <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-2 sm:mb-3 md:mb-4">
@@ -101,9 +101,9 @@ function ListingMapView() {
                 setAgeOfProperty={setAgeOfProperty}
             />
 
-            <div className="flex flex-col lg:flex-row gap-4 lg:gap-8 relative">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {showMap && (
-                    <div className="w-full lg:w-1/2 lg:sticky lg:top-24 h-[300px] lg:h-[calc(100vh-280px)] z-10">
+                    <div className="w-full h-[500px] lg:h-screen lg:sticky lg:top-0">
                         {!loading && (
                             isLoggedIn ? (
                                 <div className='relative h-full'>
@@ -119,7 +119,7 @@ function ListingMapView() {
                                     />
                                 </div>
                             ) : (
-                                <div className='h-[300px] lg:h-[calc(100vh-280px)] lg:sticky lg:top-24 flex items-center justify-center bg-gray-100 rounded-lg'>
+                                <div className='h-full flex items-center justify-center bg-gray-100 rounded-lg'>
                                     <div className='text-center'>
                                         <p className='text-lg text-gray-600 mb-4'>
                                             Please log in to access the Map View feature
@@ -133,7 +133,7 @@ function ListingMapView() {
                         )}
                     </div>
                 )}
-                <div className={`w-full lg:w-1/2 ${showMap ? 'lg:static absolute top-[300px] left-0 right-0 bg-white z-20' : 'z-10'}`}>
+                <div className="w-full">
                     {!showMap && (
                         <Button 
                             onClick={toggleView} 
