@@ -7,6 +7,7 @@ import GoogleMapSection from './GoogleMapSection';
 import { useAuth } from '@/app/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
+import FilterSection from './FilterSection';
 
 function ListingMapView() {
     const router = useRouter();
@@ -27,7 +28,12 @@ function ListingMapView() {
         if (!loading) {
             setIsLoggedIn(!!user);
         }
-    }, [user, loading])
+    }, [user, loading]);
+
+    // Add this useEffect to trigger search when filters change
+    useEffect(() => {
+        handleSearchClick();
+    }, [listingType, propertyType, subPropertyType, ageOfProperty]);
 
     const getLatestListing = async () => {
         const { data, error } = await supabase
@@ -88,7 +94,15 @@ function ListingMapView() {
                 </div>
             </div>
             
-            <div className={`flex flex-col lg:flex-row gap-8 relative`}>
+            {/* Add FilterSection here */}
+            <FilterSection
+                setListingType={setListingType}
+                setPropertyType={setPropertyType}
+                setSubPropertyType={setSubPropertyType}
+                setAgeOfProperty={setAgeOfProperty}
+            />
+
+            <div className="flex flex-col lg:flex-row gap-4 lg:gap-8 relative">
                 {showMap && (
                     <div className="w-full lg:w-1/2 lg:sticky lg:top-24 h-[300px] lg:h-[calc(100vh-280px)] z-10">
                         {!loading && (
