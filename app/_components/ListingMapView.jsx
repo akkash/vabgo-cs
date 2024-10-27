@@ -37,44 +37,71 @@ function ListingMapView() {
     }, [listingType, propertyType, subPropertyType, ageOfProperty]);
 
     const getLatestListing = async () => {
-        const { data, error } = await supabase
-            .from('listing')
-            .select(`*,listingImages(
-                url,
-                listing_id
-            )`)
-            .eq('active', true)
-            .order('id', { ascending: false })
+        try {
+            const { data, error } = await supabase
+                .from('listing')
+                .select(`*,listingImages(
+                    url,
+                    listing_id
+                )`)
+                .eq('active', true)
+                .order('id', { ascending: false })
 
-        if (data) {
-            setListing(data);
-        }
-        if (error) {
-            toast('Server Side Error')
+            if (error) throw error;
+            
+            if (data) {
+                setListing(data);
+            }
+        } catch (error) {
+            console.error('Error in getLatestListing:', error);
+            toast.error('Failed to fetch listings: ' + error.message);
         }
     }
 
     const handleSearchClick = async () => {
-        console.log(searchedAddress);
-        const searchTerm = searchedAddress?.value?.structured_formatting?.main_text
+        try {
+            let query = supabase
+                .from('listing')
+                .select(`
+                    *,
+                    listingImages (
+                        url,
+                        listing_id
+                    )
+                `)
+                .eq('active', true)
 
-        let query = supabase
-            .from('listing')
-            .select(`*,listingImages(
-                url,
-                listing_id
-            )`)
-            .eq('active', true)
-            .eq('listingType', listingType)
-            .eq('propertyType', propertyType)
-            .eq('subPropertyType', subPropertyType)
-            .eq('ageOfProperty', ageOfProperty)
-            .like('address', '%' + searchTerm + '%')
-            .order('id', { ascending: false });
+            // Only apply filters if a specific option (not "All") is selected
+            if (listingType && listingType !== 0) {
+                query = query.eq('listing_type', listingType)
+            }
 
-        const { data, error } = await query;
-        if (data) {
-            setListing(data);
+            if (propertyType && propertyType !== 0) {
+                query = query.eq('property_type', propertyType)
+            }
+
+            if (subPropertyType && subPropertyType !== 0) {
+                query = query.eq('sub_property_type', subPropertyType)
+            }
+
+            if (ageOfProperty && ageOfProperty !== 0) {
+                query = query.eq('age_of_property', ageOfProperty)
+            }
+
+            // Handle address search if provided
+            const searchTerm = searchedAddress?.value?.structured_formatting?.main_text
+            if (searchTerm && typeof searchTerm === 'string') {
+                query = query.ilike('address', `%${searchTerm}%`)
+            }
+
+            const { data, error } = await query.order('id', { ascending: false });
+
+            if (error) throw error;
+            setListing(data || []);
+            
+        } catch (error) {
+            console.error('Error in handleSearchClick:', error);
+            toast.error('Failed to fetch listings');
         }
     }
 
@@ -97,6 +124,14 @@ function ListingMapView() {
         return () => window.removeEventListener('resize', checkMobile);
     }, []);
 
+    const clearFilters = () => {
+        setListingType(0);
+        setPropertyType(0);
+        setSubPropertyType(0);
+        setAgeOfProperty(0);
+        setSearchedAddress(null);
+    };
+
     return (
         <div className="container mx-auto px-4 min-h-screen pb-24">
             <div className="text-black py-6 sm:py-8 md:py-10 lg:py-12 xl:py-16 mb-4 sm:mb-6 md:mb-8">
@@ -115,6 +150,7 @@ function ListingMapView() {
                 setPropertyType={setPropertyType}
                 setSubPropertyType={setSubPropertyType}
                 setAgeOfProperty={setAgeOfProperty}
+                onClearFilters={clearFilters}
             />
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -159,16 +195,23 @@ function ListingMapView() {
                             Show Map
                         </Button>
                     )}
-                    <Listing
-                        listing={listing}
-                        handleSearchClick={handleSearchClick}
-                        searchedAddress={(v) => setSearchedAddress(v)}
-                        setListingType={setListingType}
-                        setPropertyType={setPropertyType}
-                        setSubPropertyType={setSubPropertyType}
-                        setAgeOfProperty={setAgeOfProperty}
-                        setCoordinates={setCoordinates}
-                    />
+                    {listing.length > 0 ? (
+                        <Listing
+                            listing={listing}
+                            handleSearchClick={handleSearchClick}
+                            searchedAddress={(v) => setSearchedAddress(v)}
+                            setListingType={setListingType}
+                            setPropertyType={setPropertyType}
+                            setSubPropertyType={setSubPropertyType}
+                            setAgeOfProperty={setAgeOfProperty}
+                            setCoordinates={setCoordinates}
+                        />
+                    ) : (
+                        <div className="flex flex-col items-center justify-center p-8 bg-gray-50 rounded-lg">
+                            <p className="text-xl text-gray-600 mb-2">No Commercial listings found</p>
+                            <p className="text-sm text-gray-500">Try adjusting your filters or search criteria</p>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>
