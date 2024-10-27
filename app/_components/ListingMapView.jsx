@@ -94,7 +94,6 @@ function ListingMapView() {
                 </div>
             </div>
             
-            {/* Add FilterSection here */}
             <FilterSection
                 setListingType={setListingType}
                 setPropertyType={setPropertyType}
