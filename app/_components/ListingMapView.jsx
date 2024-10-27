@@ -22,6 +22,7 @@ function ListingMapView() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const { user, loading } = useAuth();
     const [showMap, setShowMap] = useState(true);
+    const [isMobile, setIsMobile] = useState(false);
 
     useEffect(() => {
         getLatestListing();
@@ -81,6 +82,21 @@ function ListingMapView() {
         setShowMap(!showMap);
     };
 
+    // Add this useEffect after the existing ones
+    useEffect(() => {
+        const checkMobile = () => {
+            setIsMobile(window.innerWidth < 1024); // 1024px is the 'lg' breakpoint in Tailwind
+            if (window.innerWidth < 1024) {
+                setShowMap(false);
+            }
+        };
+
+        checkMobile();
+        window.addEventListener('resize', checkMobile);
+
+        return () => window.removeEventListener('resize', checkMobile);
+    }, []);
+
     return (
         <div className="container mx-auto px-4 min-h-screen pb-24">
             <div className="text-black py-6 sm:py-8 md:py-10 lg:py-12 xl:py-16 mb-4 sm:mb-6 md:mb-8">
@@ -102,7 +118,7 @@ function ListingMapView() {
             />
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {showMap && (
+                {!isMobile && showMap && (
                     <div className="w-full h-[500px] lg:h-screen lg:sticky lg:top-0">
                         {!loading && (
                             isLoggedIn ? (
@@ -134,7 +150,7 @@ function ListingMapView() {
                     </div>
                 )}
                 <div className="w-full">
-                    {!showMap && (
+                    {!isMobile && !showMap && (
                         <Button 
                             onClick={toggleView} 
                             className="mb-4 float-right"
