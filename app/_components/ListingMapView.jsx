@@ -7,7 +7,9 @@ import GoogleMapSection from './GoogleMapSection';
 import { useAuth } from '@/app/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
-import FilterSection from './FilterSection';
+import { Search } from 'lucide-react'
+import GoogleAddressSearch from './GoogleAddressSearch'
+import FilterSection from './FilterSection'
 
 function ListingMapView() {
     const router = useRouter();
@@ -16,8 +18,6 @@ function ListingMapView() {
     const [searchedAddress, setSearchedAddress] = useState();
     const [listingType, setListingType] = useState(0);
     const [propertyType, setPropertyType] = useState(0);
-    const [subPropertyType, setSubPropertyType] = useState(0);
-    const [ageOfProperty, setAgeOfProperty] = useState();
     const [coordinates, setCoordinates] = useState();
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const { user, loading } = useAuth();
@@ -34,7 +34,7 @@ function ListingMapView() {
     // Add this useEffect to trigger search when filters change
     useEffect(() => {
         handleSearchClick();
-    }, [listingType, propertyType, subPropertyType, ageOfProperty]);
+    }, [listingType, propertyType]);
 
     const getLatestListing = async () => {
         try {
@@ -71,27 +71,12 @@ function ListingMapView() {
                 `)
                 .eq('active', true)
 
-            // Only apply filters if a specific option (not "All") is selected
             if (listingType && listingType !== 0) {
                 query = query.eq('listing_type', listingType)
             }
 
             if (propertyType && propertyType !== 0) {
                 query = query.eq('property_type', propertyType)
-            }
-
-            if (subPropertyType && subPropertyType !== 0) {
-                query = query.eq('sub_property_type', subPropertyType)
-            }
-
-            if (ageOfProperty && ageOfProperty !== 0) {
-                query = query.eq('age_of_property', ageOfProperty)
-            }
-
-            // Handle address search if provided
-            const searchTerm = searchedAddress?.value?.structured_formatting?.main_text
-            if (searchTerm && typeof searchTerm === 'string') {
-                query = query.ilike('address', `%${searchTerm}%`)
             }
 
             const { data, error } = await query.order('id', { ascending: false });
@@ -127,8 +112,6 @@ function ListingMapView() {
     const clearFilters = () => {
         setListingType(0);
         setPropertyType(0);
-        setSubPropertyType(0);
-        setAgeOfProperty(0);
         setSearchedAddress(null);
     };
 
@@ -144,14 +127,39 @@ function ListingMapView() {
                     </p>
                 </div>
             </div>
-            
-            <FilterSection
-                setListingType={setListingType}
-                setPropertyType={setPropertyType}
-                setSubPropertyType={setSubPropertyType}
-                setAgeOfProperty={setAgeOfProperty}
-                onClearFilters={clearFilters}
-            />
+
+            {/* Search Section */}
+            <div className='mb-4'>
+                <div className='p-3 flex flex-col sm:flex-row gap-3 sm:gap-6'>
+                    <GoogleAddressSearch
+                        selectedAddress={(v) => {
+                            searchedAddress(v);
+                        }}
+                        setCoordinates={setCoordinates}
+                        className="w-full sm:w-auto"
+                    />
+                    <Button className="flex gap-2 w-full sm:w-auto justify-center" onClick={handleSearchClick}>
+                        <Search className='h-4 w-4'/> 
+                        Search
+                    </Button>
+                </div>
+            </div>
+
+            {/* Filter Section */}
+            <div className="flex items-center justify-between px-3 mb-4">
+                <FilterSection
+                    setListingType={setListingType}
+                    setPropertyType={setPropertyType}
+                />
+                <Button 
+                    variant="outline" 
+                    onClick={clearFilters}
+                    size="sm"
+                    className="ml-4"
+                >
+                    Clear Filters
+                </Button>
+            </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {!isMobile && showMap && (
@@ -202,9 +210,8 @@ function ListingMapView() {
                             searchedAddress={(v) => setSearchedAddress(v)}
                             setListingType={setListingType}
                             setPropertyType={setPropertyType}
-                            setSubPropertyType={setSubPropertyType}
-                            setAgeOfProperty={setAgeOfProperty}
                             setCoordinates={setCoordinates}
+                            onClearFilters={clearFilters}
                         />
                     ) : (
                         <div className="flex flex-col items-center justify-center p-8 bg-gray-50 rounded-lg">

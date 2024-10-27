@@ -11,10 +11,7 @@ import { Button } from "@/components/ui/button"
 
 function FilterSection({ 
     setListingType, 
-    setPropertyType, 
-    setSubPropertyType, 
-    setAgeOfProperty,
-    onClearFilters  // Add this prop
+    setPropertyType,
 }) {
     return (
         <div className="flex flex-wrap gap-4 mb-6 items-center">
@@ -64,93 +61,7 @@ function FilterSection({
                 </SelectContent>
                 </Select>
 
-                <Select  onValueChange={setSubPropertyType}>
-                <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Sub Property Type" />
-                </SelectTrigger>
-                <SelectContent>
-                <SelectItem value="Commercial Office Space">
-                        <h2 className='flex gap-2'>
-                             <Captions className='h-5 w-5 text-primary'/>Commercial Office Space</h2>
-                    </SelectItem>
-                    <SelectItem value="Co-Working Space">
-                        <h2 className='flex gap-2'>
-                             <Captions className='h-5 w-5 text-primary'/>Co-Working Space</h2>
-                    </SelectItem>
-                    <SelectItem value="Commercial Shop">
-                        <h2 className='flex gap-2'>
-                             <Captions className='h-5 w-5 text-primary'/>Commercial Shop</h2>
-                    </SelectItem>
-                    <SelectItem value="Office In IT SEZ Park">
-                        <h2 className='flex gap-2'>
-                             <Captions className='h-5 w-5 text-primary'/>Office In IT SEZ Park</h2>
-                    </SelectItem>
-                    <SelectItem value="Industrial Land">
-                        <h2 className='flex gap-2'>
-                             <Captions className='h-5 w-5 text-primary'/>Industrial Land</h2>
-                    </SelectItem>
-                    <SelectItem value="Commercial Land">
-                        <h2 className='flex gap-2'>
-                             <Captions className='h-5 w-5 text-primary'/>Commercial Land</h2>
-                    </SelectItem>
-                    <SelectItem value="Warehouse">
-                        <h2 className='flex gap-2'>
-                             <Captions className='h-5 w-5 text-primary'/>Warehouse</h2>
-                    </SelectItem>
-                    <SelectItem value="Factory">
-                        <h2 className='flex gap-2'>
-                             <Captions className='h-5 w-5 text-primary'/>Factory</h2>
-                    </SelectItem>
-                    <SelectItem value="Industrial Shed">
-                        <h2 className='flex gap-2'>
-                             <Captions className='h-5 w-5 text-primary'/>Industrial Shed</h2>
-                    </SelectItem>
-                    <SelectItem value="Industrial Building">
-                        <h2 className='flex gap-2'>
-                             <Captions className='h-5 w-5 text-primary'/>Industrial Building</h2>
-                    </SelectItem>
-                    <SelectItem value="Other Business">
-                        <h2 className='flex gap-2'>
-                             <Captions className='h-5 w-5 text-primary'/>Other Business</h2>
-                    </SelectItem>
-                  
-                  
-                </SelectContent>
-                </Select>
-                <Select  onValueChange={(value)=>value=='All'?
-                setAgeOfProperty(null): setAgeOfProperty(value)}>
-                <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Age of Property" />
-                </SelectTrigger>
-                <SelectContent>
-                <SelectItem value="Under Construction">
-                Under Construction
-                    </SelectItem>
-                    <SelectItem value="Less than a Year">
-                    Less than a Year
-                    </SelectItem>
-                    <SelectItem value="1 to 5 Year">
-                    1 to 5 Year
-                    </SelectItem>
-                    <SelectItem value="5 to 10 Year">
-                    5 to 10 Year
-                    </SelectItem>
-                    <SelectItem value="More than 10 Year">
-                    More than 10 Year
-                    </SelectItem>
-                  
-                  
-                </SelectContent>
-                </Select>
-
             </div>
-            <Button 
-                variant="outline" 
-                onClick={onClearFilters}
-                className="ml-auto"
-            >
-                Clear Filters
-            </Button>
         </div>
     )
 }

@@ -1,54 +1,14 @@
-import {  MapPin, Search } from 'lucide-react'
+import { MapPin, SearchX } from 'lucide-react'
 import Image from 'next/image'
-import React, { useState } from 'react'
-import GoogleAddressSearch from './GoogleAddressSearch'
-import { Button } from '@/components/ui/button'
-import FilterSection from './FilterSection'
+import React from 'react'
 import Link from 'next/link'
 
-function Listing({listing,handleSearchClick,searchedAddress,
-    setListingType,
-    setPropertyType,
-    setSubPropertyType,
-    setAgeOfProperty,
-    setCoordinates,
-}) {
-  const [address,setAddress]=useState();
+function Listing({listing}) {
   return (
     <div>
-      <div className='mb-4'>
-        <div className='p-3 flex flex-col sm:flex-row gap-3 sm:gap-6'>
-          <GoogleAddressSearch
-            selectedAddress={(v) => {
-              searchedAddress(v);
-              setAddress(v);
-            }}
-            setCoordinates={setCoordinates}
-            className="w-full sm:w-auto"
-          />
-          <Button className="flex gap-2 w-full sm:w-auto justify-center" onClick={handleSearchClick}>
-            <Search className='h-4 w-4'/> 
-            Search
-          </Button>
-        </div>
-      </div>
-
-      {/*
-      <div className='mb-4'>
-        <FilterSection
-          setListingType={setListingType}
-          setPropertyType={setPropertyType}
-          setSubPropertyType={setSubPropertyType}
-          setAgeOfProperty={setAgeOfProperty}
-        />
-      </div>
-*/}
-      {address&&<div className='px-3 my-5'>
-         <h2 className='text-xl'>
-         Found  <span className='font-bold'>{listing?.length}</span> Result in <span className='text-primary font-bold'>{address?.label}</span></h2> 
-         
-      </div>}
-      <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+      {/* Results Section */}
+      {listing.length > 0 ? (
+        <div className="grid grid-cols-1 gap-6">
           {listing?.length>0? listing.map((item,index)=>item?.listingImages[0]?.url&&(
              <Link href={'/commercial/'+item?.slug} key={index}>
              <div className='p-3 hover:border hover:border-primary rounded-lg cursor-pointer'>
@@ -76,16 +36,21 @@ function Listing({listing,handleSearchClick,searchedAddress,
                   </div>
               </div>
               </Link>
-          ))
-      :[1,2,3,4,5,6,7,8].map((item,index)=>(
-          <div key={index} className='h-[230px] w-full
-          bg-slate-200 animate-pulse rounded-lg
-          '>
-
-          </div>
-      ))
-      }
-      </div>
+          )) : (
+            [1,2,3,4,5,6,7,8].map((item,index)=>(
+              <div key={index} className='h-[230px] w-full bg-slate-200 animate-pulse rounded-lg'></div>
+            ))
+          )}
+        </div>
+      ) : (
+        <div className="flex flex-col items-center justify-center p-8 bg-gray-50 rounded-lg shadow-sm">
+          <SearchX className="h-12 w-12 text-gray-400 mb-3" />
+          <h3 className="text-lg font-medium text-gray-900">No Commercial listings found</h3>
+          <p className="text-gray-500 text-center mt-2">
+            Try adjusting your filters or search criteria
+          </p>
+        </div>
+      )}
     </div>
   )
 }
