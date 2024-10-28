@@ -162,6 +162,96 @@ function ListingMapView() {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div className="w-full">
+                    {!isMobile && !showMap && (
+                        <Button 
+                            onClick={toggleView} 
+                            className="mb-4 float-right"
+                            size="sm"
+                        >
+                            Show Map
+                        </Button>
+                    )}
+                    {listing.length > 0 ? (
+                        <div className="space-y-4">
+                            {listing.map((item) => (
+                                <div 
+                                    key={item.id} 
+                                    className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow cursor-pointer" 
+                                    onClick={() => router.push(`/commercial/${item.property_title}`)}
+                                >
+                                    {/* Main Card Container */}
+                                    <div className="flex flex-col sm:flex-row">
+                                        {/* Image Section */}
+                                        <div className="relative sm:w-64 h-48 sm:h-full" itemScope itemType="https://schema.org/Photograph">
+                                            {item.listingImages?.[0]?.url && (
+                                                <img 
+                                                    src={item.listingImages[0].url}
+                                                    alt={`${item.title}`}
+                                                    className="w-full h-48 object-cover rounded-t-lg sm:rounded-l-lg sm:rounded-tr-none"
+                                                    loading="lazy"
+                                                    itemProp=""
+                                                />
+                                            )}
+                                            {/* Photo count indicator */}
+                                            <div className="absolute bottom-2 right-2 bg-black/70 text-white px-2 py-1 rounded text-sm flex items-center gap-1">
+                                                <img 
+                                                    width="14" 
+                                                    height="12" 
+                                                    src="/camera-icon.svg" 
+                                                    alt="" 
+                                                    className="brightness-0 invert"
+                                                />
+                                                <span>{item.listingImages?.length || 0}</span>
+                                            </div>
+                                        </div>
+
+                                        {/* Content Section */}
+                                        <div className="flex-1 p-4">
+                                            <div className="flex flex-col h-full justify-between">
+                                                {/* Price and Title Section */}
+                                                <div>
+                                                    <h2 className="text-base font-medium text-foreground">
+                                                      {item.property_title}
+                                                    </h2>
+                                                    <div className="flex items-center gap-2 mb-1">
+                                                        <span className="text-base font-medium text-primary">
+                                                            ₹{item.price ? (typeof item.price === 'number' ? item.price.toLocaleString() : item.price) : 'N/A'}/mo
+                                                        </span>
+                                                    </div>
+                                                </div>
+
+                                                {/* Property Details */}
+                                                <div className="space-y-2">
+
+                                                <div className="flex items-center gap-4 text-sm text-gray-600">
+                                                        <span>{item.property_type}</span>
+                                                        <span>•</span>
+                                                        <span>Built-up Area: {item.build_up_area ? (typeof item.build_up_area === 'number' ? item.build_up_area.toLocaleString() : item.build_up_area) : 'N/A'} sqft</span>
+                                                        <span>•</span>
+                                                        <span>Carpet Area: {item.carpet_area ? (typeof item.carpet_area === 'number' ? item.carpet_area.toLocaleString() : item.carpet_area) : 'N/A'} sqft</span>
+                                                    </div>
+
+                                                    <div className="text-sm text-gray-600">
+                                                        <div>{item.address}</div>
+                                                        <div>{item.city}</div>
+                                                    </div>
+                                  
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="flex flex-col items-center justify-center p-8 bg-gray-50 rounded-lg">
+                            <p className="text-xl text-gray-600 mb-2">No Commercial listings found</p>
+                            <p className="text-sm text-gray-500">Try adjusting your filters or search criteria</p>
+                        </div>
+                    )}
+                </div>
                 {!isMobile && showMap && (
                     <div className="w-full h-[500px] lg:h-screen lg:sticky lg:top-0">
                         {!loading && (
@@ -193,33 +283,6 @@ function ListingMapView() {
                         )}
                     </div>
                 )}
-                <div className="w-full">
-                    {!isMobile && !showMap && (
-                        <Button 
-                            onClick={toggleView} 
-                            className="mb-4 float-right"
-                            size="sm"
-                        >
-                            Show Map
-                        </Button>
-                    )}
-                    {listing.length > 0 ? (
-                        <Listing
-                            listing={listing}
-                            handleSearchClick={handleSearchClick}
-                            searchedAddress={(v) => setSearchedAddress(v)}
-                            setListingType={setListingType}
-                            setPropertyType={setPropertyType}
-                            setCoordinates={setCoordinates}
-                            onClearFilters={clearFilters}
-                        />
-                    ) : (
-                        <div className="flex flex-col items-center justify-center p-8 bg-gray-50 rounded-lg">
-                            <p className="text-xl text-gray-600 mb-2">No Commercial listings found</p>
-                            <p className="text-sm text-gray-500">Try adjusting your filters or search criteria</p>
-                        </div>
-                    )}
-                </div>
             </div>
         </div>
     )
