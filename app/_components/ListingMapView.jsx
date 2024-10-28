@@ -265,7 +265,7 @@ function ListingMapView() {
                                 <div 
                                     key={item.id} 
                                     className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow cursor-pointer" 
-                                    onClick={() => router.push(`/commercial/${item.property_title}`)}
+                                    onClick={() => router.push(`/commercial/${item.slug}`)}
                                 >
                                     {/* Main Card Container */}
                                     <div className="flex flex-col sm:flex-row">
