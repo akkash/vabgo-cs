@@ -23,6 +23,7 @@ function ListingMapView() {
     const { user, loading } = useAuth();
     const [showMap, setShowMap] = useState(true);
     const [isMobile, setIsMobile] = useState(false);
+    const [sortBy, setSortBy] = useState('newest'); // Add at the top with other state declarations
 
     useEffect(() => {
         getLatestListing();
@@ -109,11 +110,62 @@ function ListingMapView() {
         return () => window.removeEventListener('resize', checkMobile);
     }, []);
 
-    const clearFilters = () => {
-        setListingType(0);
-        setPropertyType(0);
-        setSearchedAddress(null);
-    };
+    const handleSort = async (sortValue) => {
+        try {
+            let query = supabase
+                .from('listing')
+                .select(`
+                    *,
+                    listingImages (
+                        url,
+                        listing_id
+                    )
+                `)
+                .eq('active', true)
+
+            if (listingType && listingType !== 0) {
+                query = query.eq('listing_type', listingType)
+            }
+
+            if (propertyType && propertyType !== 0) {
+                query = query.eq('property_type', propertyType)
+            }
+
+            // Apply sorting
+            switch (sortValue) {
+                case 'price-asc':
+                    query = query.order('price', { ascending: true });
+                    break;
+                case 'price-desc':
+                    query = query.order('price', { ascending: false });
+                    break;
+                case 'newest':
+                    query = query.order('created_at', { ascending: false });
+                    break;
+                case 'oldest':
+                    query = query.order('created_at', { ascending: true });
+                    break;
+                case 'area-asc':
+                    query = query.order('build_up_area', { ascending: true });
+                    break;
+                case 'area-desc':
+                    query = query.order('build_up_area', { ascending: false });
+                    break;
+                default:
+                    query = query.order('id', { ascending: false });
+            }
+
+            const { data, error } = await query;
+
+            if (error) throw error;
+            setListing(data || []);
+            setSortBy(sortValue);
+            
+        } catch (error) {
+            console.error('Error in handleSort:', error);
+            toast.error('Failed to sort listings');
+        }
+    }
 
     return (
         <div className="container mx-auto px-4 min-h-screen pb-24">
@@ -145,20 +197,31 @@ function ListingMapView() {
                 </div>
             </div>
 
-            {/* Filter Section */}
-            <div className="flex items-center justify-between px-3 mb-4">
-                <FilterSection
-                    setListingType={setListingType}
-                    setPropertyType={setPropertyType}
-                />
-                <Button 
-                    variant="outline" 
-                    onClick={clearFilters}
-                    size="sm"
-                    className="ml-4"
-                >
-                    Clear Filters
-                </Button>
+            {/* Filter Section with Listing Count */}
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between px-3 mb-4">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-3 w-full">
+                    <div className="flex flex-wrap gap-3 items-center">
+                        <FilterSection
+                            setListingType={setListingType}
+                            setPropertyType={setPropertyType}
+                            sortBy={sortBy}
+                            onSort={handleSort}
+                            onClearFilters={() => {
+                                setListingType(0);
+                                setPropertyType(0);
+                                setSearchedAddress(null);
+                                setSortBy('newest');
+                                handleSort('newest');
+                            }}
+                        />
+                    </div>
+                </div>
+            </div>
+
+            <div className="px-3 mb-2">
+                <span className="text-sm text-muted-foreground text-left">
+                    {listing.length} {listing.length === 1 ? 'Property' : 'Properties'} Available
+                </span>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
