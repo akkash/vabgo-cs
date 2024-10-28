@@ -24,6 +24,7 @@ function ListingMapView() {
     const [showMap, setShowMap] = useState(true);
     const [isMobile, setIsMobile] = useState(false);
     const [sortBy, setSortBy] = useState('newest'); // Add at the top with other state declarations
+    const [selectedCity, setSelectedCity] = useState(null);
 
     useEffect(() => {
         getLatestListing();
@@ -80,6 +81,11 @@ function ListingMapView() {
                 query = query.eq('property_type', propertyType)
             }
 
+            // Add city filter if available
+            if (selectedCity) {
+                query = query.ilike('city', `%${selectedCity}%`)
+            }
+
             const { data, error } = await query.order('id', { ascending: false });
 
             if (error) throw error;
@@ -90,6 +96,13 @@ function ListingMapView() {
             toast.error('Failed to fetch listings');
         }
     }
+
+    // Trigger search when city changes
+    useEffect(() => {
+        if (selectedCity) {
+            handleSearchClick();
+        }
+    }, [selectedCity]);
 
     const toggleView = () => {
         setShowMap(!showMap);
@@ -182,19 +195,30 @@ function ListingMapView() {
 
             {/* Search Section */}
             <div className='mb-4'>
-                <div className='p-3 flex flex-col sm:flex-row gap-3 sm:gap-6'>
-                    <GoogleAddressSearch
-                        selectedAddress={(v) => {
-                            searchedAddress(v);
-                        }}
-                        setCoordinates={setCoordinates}
-                        className="w-full sm:w-auto"
-                    />
-                    <Button className="flex gap-2 w-full sm:w-auto justify-center" onClick={handleSearchClick}>
+                <div className='p-3 flex flex-col sm:flex-row gap-3 sm:gap-6 justify-center items-center'> {/* Added justify-center and items-center */}
+                    <div className="max-w-md w-full sm:w-96"> {/* Added sm:w-96 for a fixed width on larger screens */}
+                        <GoogleAddressSearch
+                            selectedAddress={setSearchedAddress}
+                            setCoordinates={setCoordinates}
+                            setSelectedCity={setSelectedCity}
+                            className="w-full"
+                        />
+                    </div>
+                    <Button 
+                        className="flex gap-2 w-full sm:w-auto justify-center" 
+                        onClick={handleSearchClick}
+                    >
                         <Search className='h-4 w-4'/> 
                         Search
                     </Button>
                 </div>
+                {selectedCity && (
+                    <div className="px-3 mt-2 text-center"> {/* Added text-center */}
+                        <span className="text-sm text-muted-foreground">
+                            Showing results for: {selectedCity}
+                        </span>
+                    </div>
+                )}
             </div>
 
             {/* Filter Section with Listing Count */}
