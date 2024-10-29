@@ -371,6 +371,177 @@ function ListingMapView() {
                     </div>
                 )}
             </div>
+
+            {/* How It Works Section */}
+            <div className="mt-16 px-4">
+                <h2 className="text-2xl md:text-3xl font-bold text-center mb-12">
+                    How It Works
+                </h2>
+                
+                {/* Steps */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+                    {/* Step 1 */}
+                    <div className="text-center">
+                        <div className="mb-6">
+                            <img 
+                                src="/post.jpg" 
+                                alt="Post Property" 
+                                className="w-48 h-48 mx-auto"
+                            />
+                        </div>
+                        <div className="bg-primary/10 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <span className="text-primary font-bold">1</span>
+                        </div>
+                        <h3 className="font-semibold mb-2">Post your Property Ad</h3>
+                        <p className="text-gray-600 text-sm">
+                            Enter all details like locality name, amenities etc. along with uploading Photos
+                        </p>
+                    </div>
+
+                    {/* Step 2 */}
+                    <div className="text-center">
+                        <div className="mb-6">
+                            <img 
+                                src="/post_property.jpg" 
+                                alt="Check Responses" 
+                                className="w-48 h-48 mx-auto"
+                            />
+                        </div>
+                        <div className="bg-primary/10 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <span className="text-primary font-bold">2</span>
+                        </div>
+                        <h3 className="font-semibold mb-2">Check Responses on Dashboard</h3>
+                        <p className="text-gray-600 text-sm">
+                            Get access to Buyer/Tenant contact details & connect easily
+                        </p>
+                    </div>
+
+                    {/* Step 3 */}
+                    <div className="text-center">
+                        <div className="mb-6">
+                            <img 
+                                src="https://illustrations.popsy.co/sky/success.svg" 
+                                alt="Close Deal" 
+                                className="w-48 h-48 mx-auto"
+                            />
+                        </div>
+                        <div className="bg-primary/10 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <span className="text-primary font-bold">3</span>
+                        </div>
+                        <h3 className="font-semibold mb-2">Sell/Rent faster with instant Connect</h3>
+                        <p className="text-gray-600 text-sm">
+                            Negotiate with your prospective Buyer/Tenant & mutually close the deal (site-visit)
+                        </p>
+                    </div>
+                </div>
+
+                {/* Tips and Benefits Sections */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+                    {/* Tips Section */}
+                    <div className="relative">
+                        <svg 
+                            className="absolute right-0 top-0 w-32 h-32 text-gray-200"
+                            xmlns="http://www.w3.org/2000/svg" 
+                            fill="none" 
+                            viewBox="0 0 24 24" 
+                            stroke="currentColor"
+                        >
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                        </svg>
+                        <h3 className="text-xl font-bold mb-6">Tips on Selling a Property Online</h3>
+                        <div className="space-y-4">
+                            <div className="flex items-start gap-3">
+                                <div className="mt-1">
+                                    <svg 
+                                        className="w-5 h-5 text-green-500"
+                                        xmlns="http://www.w3.org/2000/svg" 
+                                        viewBox="0 0 20 20" 
+                                        fill="currentColor"
+                                    >
+                                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h4 className="font-semibold mb-2">Add Quality Photos</h4>
+                                    <p className="text-gray-600 text-sm">
+                                        Do not forget to add high-quality photos as it's key for any property to stand out.
+                                    </p>
+                                </div>
+                            </div>
+                            <div className="flex items-start gap-3">
+                                <div className="mt-1">
+                                    <svg 
+                                        className="w-5 h-5 text-green-500"
+                                        xmlns="http://www.w3.org/2000/svg" 
+                                        viewBox="0 0 20 20" 
+                                        fill="currentColor"
+                                    >
+                                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h4 className="font-semibold mb-2">Choose Correct Locality/Address</h4>
+                                    <p className="text-gray-600 text-sm">
+                                        Make sure to accurately map your locality while filling in the details of your property.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Benefits Section */}
+                    <div className="relative">
+                        <svg 
+                            className="absolute right-0 top-0 w-32 h-32 text-gray-200"
+                            xmlns="http://www.w3.org/2000/svg" 
+                            fill="none" 
+                            viewBox="0 0 24 24" 
+                            stroke="currentColor"
+                        >
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                        </svg>
+                        <h3 className="text-xl font-bold mb-6">Benefits of Selling Your Property Online</h3>
+                        <div className="space-y-4">
+                            <div className="flex items-start gap-3">
+                                <div className="mt-1">
+                                    <svg 
+                                        className="w-5 h-5 text-yellow-500"
+                                        xmlns="http://www.w3.org/2000/svg" 
+                                        viewBox="0 0 20 20" 
+                                        fill="currentColor"
+                                    >
+                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h4 className="font-semibold mb-2">Time-Efficient</h4>
+                                    <p className="text-gray-600 text-sm">
+                                        Save time, manage your bookings at your convenience and receive quality leads quickly.
+                                    </p>
+                                </div>
+                            </div>
+                            <div className="flex items-start gap-3">
+                                <div className="mt-1">
+                                    <svg 
+                                        className="w-5 h-5 text-yellow-500"
+                                        xmlns="http://www.w3.org/2000/svg" 
+                                        viewBox="0 0 20 20" 
+                                        fill="currentColor"
+                                    >
+                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h4 className="font-semibold mb-2">Get Better Exposure</h4>
+                                    <p className="text-gray-600 text-sm">
+                                        Reach a larger audience of prospective buyers who search online.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     )
 }
