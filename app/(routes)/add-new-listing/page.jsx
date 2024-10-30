@@ -14,10 +14,10 @@ import * as Yup from 'yup';
 
 // Define LocationSchema outside of the component
 const LocationSchema = Yup.object().shape({
+    userType: Yup.string().required('Please select Owner or Agent'),
     contactname: Yup.string().required('Contact Name is required'),
+    email: Yup.string().email('Invalid email').required('Email is required'),
     address: Yup.string().required('Address is required'),
-    latitude: Yup.string().nullable(),
-    longitude: Yup.string().nullable(),
 });
 
 function AddNewListing() {
@@ -39,76 +39,18 @@ function AddNewListing() {
         };
     }, []);
 
-    const getCityAndLocalityFromCoordinates = async (lat, lng) => {
-        return new Promise((resolve, reject) => {
-            if (!window.google || !window.google.maps) {
-                reject("Google Maps API not loaded");
-                return;
-            }
-
-            const geocoder = new window.google.maps.Geocoder();
-            const latlng = { lat: parseFloat(lat), lng: parseFloat(lng) };
-
-            geocoder.geocode({ location: latlng }, (results, status) => {
-                if (status === "OK") {
-                    console.log("Geocoding results:", results);
-                    let city = "";
-                    let locality = "";
-
-                    if (results[0]) {
-                        for (let result of results) {
-                            for (let component of result.address_components) {
-                                if (component.types.includes("administrative_area_level_3")) {
-                                    city = component.long_name;
-                                }
-                                if (component.types.includes("administrative_area_level_4")) {
-                                    locality = component.long_name;
-                                }
-                                if (city && locality) break;
-                            }
-                            if (city && locality) break;
-                        }
-                    }
-                    resolve({ city, locality });
-                } else {
-                    reject("Geocoder failed due to: " + status);
-                }
-            });
-        });
-    };
-
     const nextHandler = async (values) => {
         setLoader(true);
-        let coordinates = null;
-
-        if (values.latitude && values.longitude) {
-            coordinates = {
-                lat: parseFloat(values.latitude),
-                lng: parseFloat(values.longitude)
-            };
-        }
-
         try {
-            let cityData = { city: "", locality: "" };
-            if (coordinates) {
-                try {
-                    cityData = await getCityAndLocalityFromCoordinates(coordinates.lat, coordinates.lng);
-                } catch (geocodeError) {
-                    console.error('Error getting city and locality:', geocodeError);
-                    // Continue with empty city if geocoding fails
-                }
-            }
-
             const { data, error } = await supabase
                 .from('listing')
                 .insert([
                     {
                         address: values.address,
                         contactname: values.contactname,
-                        coordinates: coordinates,
+                        email: values.email,
                         createdBy: user?.phone,
-                        city: cityData.city,
-                        locality: cityData.locality
+                        userType: values.userType,
                     },
                 ])
                 .select();
@@ -133,24 +75,50 @@ function AddNewListing() {
 
     return (
         <div>
-
-            {/* Existing content */}
             <div className='mt-10 md:mx-10 lg:mx-10'>
                 <div className='p-10 flex flex-col gap-5 items-center justify-center'>
                     <h2 className='font-bold text-3xl'>Sell or Rent Your Commercial Property at <span className="text-blue-500">199₹</span> with Vabgo.com.</h2>
 
                     <Formik
                         initialValues={{
+                            userType: '',
                             address: '',
-                            contactname:'',
-                            latitude: '',
-                            longitude: '',
+                            contactname: '',
+                            email: '',
                         }}
                         validationSchema={LocationSchema}
                         onSubmit={nextHandler}
                     >
                         {({ errors, touched, setFieldValue, values }) => (
-                            <Form className='w-full max-w-md'>
+                            <Form className='w-full max-w-md mb-20 bg-white rounded-lg shadow-md border border-gray-200 p-8'>
+                                <h3 className='text-2xl font-semibold mb-8 text-center'>Personal Details</h3>
+                                <div className='flex gap-2 flex-col mb-6'>
+                                    <label className='block text-sm font-medium text-gray-700'>I am</label>
+                                    <div className='flex gap-4'>
+                                        <label className='flex items-center gap-2'>
+                                            <Field
+                                                type="radio"
+                                                name="userType"
+                                                value="owner"
+                                                className="form-radio text-blue-500"
+                                            />
+                                            <span>Owner</span>
+                                        </label>
+                                        <label className='flex items-center gap-2'>
+                                            <Field
+                                                type="radio"
+                                                name="userType"
+                                                value="agent"
+                                                className="form-radio text-blue-500"
+                                            />
+                                            <span>Agent</span>
+                                        </label>
+                                    </div>
+                                    {errors.userType && touched.userType && (
+                                        <div className='text-red-500 text-sm mt-1'>{errors.userType}</div>
+                                    )}
+                                </div>
+
                                 <div className='flex gap-2 flex-col mb-4'>
                                     <label htmlFor="contactname" className='block text-sm font-medium text-gray-700'>Contact Name</label>
                                     <Field
@@ -161,6 +129,18 @@ function AddNewListing() {
                                         className='mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50'
                                     />
                                     {errors.contactname && touched.contactname && <div className='text-red-500 text-sm mt-1'>{errors.contactname}</div>}
+                                </div>
+
+                                <div className='flex gap-2 flex-col mb-4'>
+                                    <label htmlFor="email" className='block text-sm font-medium text-gray-700'>Email Address</label>
+                                    <Field
+                                        as={Input}
+                                        type="email"
+                                        placeholder="Email Address"
+                                        name="email"
+                                        className='mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50'
+                                    />
+                                    {errors.email && touched.email && <div className='text-red-500 text-sm mt-1'>{errors.email}</div>}
                                 </div>
 
                                 <div className='flex gap-2 flex-col mb-4'>
@@ -175,38 +155,42 @@ function AddNewListing() {
                                     {errors.address && touched.address && <div className='text-red-500 text-sm mt-1'>{errors.address}</div>}
                                 </div>
 
-                                <div className='flex gap-2 flex-col mb-4'>
-                                    <label htmlFor="latitude" className='block text-sm font-medium text-gray-700'>Latitude (optional)</label>
-                                    <Field
-                                        as={Input}
-                                        type="text"
-                                        placeholder="Enter latitude"
-                                        name="latitude"
-                                        className='mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50'
-                                    />
-                                    {errors.latitude && touched.latitude && <div className='text-red-500 text-sm mt-1'>{errors.latitude}</div>}
-                                </div>
-
-                                <div className='flex gap-2 flex-col mb-4'>
-                                    <label htmlFor="longitude" className='block text-sm font-medium text-gray-700'>Longitude (optional)</label>
-                                    <Field
-                                        as={Input}
-                                        type="text"
-                                        placeholder="Enter longitude"
-                                        name="longitude"
-                                        className='mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50'
-                                    />
-                                    {errors.longitude && touched.longitude && <div className='text-red-500 text-sm mt-1'>{errors.longitude}</div>}
-                                </div>
-
                                 <div className='flex justify-between'>
-                                    <Button type="submit" disabled={loader} className='bg-green-500 text-white'>
+                                    <Button 
+                                        type="submit" 
+                                        disabled={loader} 
+                                        className='bg-blue-500 hover:bg-blue-600 text-white w-full py-2 text-lg font-medium transition-colors'
+                                    >
                                         {loader ? <Loader className='animate-spin' /> : 'Next'}
                                     </Button>
                                 </div>
                             </Form>
                         )}
                     </Formik>
+
+
+                    {/* Tips Section */}
+                    <div className='w-full max-w-4xl mb-10'>
+                        <h3 className='text-2xl font-bold mb-6'>Tips on Selling a Property Online</h3>
+                        <div className='grid md:grid-cols-2 gap-6'>
+                            <div className='p-6 border rounded-lg shadow-sm'>
+                                <h4 className='font-semibold mb-2'>Add Quality Photos</h4>
+                                <p className='text-gray-600'>Add high-quality photos as it's key for any property to stand out.</p>
+                            </div>
+                            <div className='p-6 border rounded-lg shadow-sm'>
+                                <h4 className='font-semibold mb-2'>Choose Correct Locality/Address</h4>
+                                <p className='text-gray-600'>Accurately map your locality to receive genuine queries for your property.</p>
+                            </div>
+                            <div className='p-6 border rounded-lg shadow-sm'>
+                                <h4 className='font-semibold mb-2'>Write a Great Description</h4>
+                                <p className='text-gray-600'>Provide a short description highlighting key USPs and relevant details.</p>
+                            </div>
+                            <div className='p-6 border rounded-lg shadow-sm'>
+                                <h4 className='font-semibold mb-2'>Add Additional Details</h4>
+                                <p className='text-gray-600'>Include all relevant details about furnishing, flooring, water supply, etc.</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

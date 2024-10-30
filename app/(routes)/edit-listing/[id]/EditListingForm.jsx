@@ -25,6 +25,44 @@ export default function EditListingForm({ initialListing }) {
   const [loading, setLoading] = useState(false);
   const supabase = createClientComponentClient()
 
+  const getCityAndLocalityFromCoordinates = async (lat, lng) => {
+    return new Promise((resolve, reject) => {
+      if (!window.google || !window.google.maps) {
+        reject("Google Maps API not loaded");
+        return;
+      }
+
+      const geocoder = new window.google.maps.Geocoder();
+      const latlng = { lat: parseFloat(lat), lng: parseFloat(lng) };
+
+      geocoder.geocode({ location: latlng }, (results, status) => {
+        if (status === "OK") {
+          console.log("Geocoding results:", results);
+          let city = "";
+          let locality = "";
+
+          if (results[0]) {
+            for (let result of results) {
+              for (let component of result.address_components) {
+                if (component.types.includes("administrative_area_level_3")) {
+                  city = component.long_name;
+                }
+                if (component.types.includes("administrative_area_level_4")) {
+                  locality = component.long_name;
+                }
+                if (city && locality) break;
+              }
+              if (city && locality) break;
+            }
+          }
+          resolve({ city, locality });
+        } else {
+          reject("Geocoder failed due to: " + status);
+        }
+      });
+    });
+  };
+
   const onSubmitHandler = async (values) => {
     setLoading(true);
     try {
@@ -77,6 +115,8 @@ export default function EditListingForm({ initialListing }) {
           washroom: initialListing.washroom || '',
           water: initialListing.water || '',
           property_security: initialListing.property_security || '',
+          latitude: initialListing.latitude || '',
+          longitude: initialListing.longitude || '',
         }}
         enableReinitialize={true}
         onSubmit={onSubmitHandler}
@@ -358,6 +398,54 @@ export default function EditListingForm({ initialListing }) {
                       <SelectItem value="No">No</SelectItem>
                     </SelectContent>
                   </Select>
+                </div>
+
+                {/* Latitude */}
+                <div className='flex gap-2 flex-col'>
+                  <h2 className='text-gray-500'>Latitude</h2>
+                  <Input 
+                    type="number" 
+                    step="any"
+                    placeholder="Ex. 11.3410" 
+                    onChange={async (e) => {
+                      handleChange(e);
+                      if (e.target.value && values.longitude) {
+                        try {
+                          const { city, locality } = await getCityAndLocalityFromCoordinates(e.target.value, values.longitude);
+                          if (city) setFieldValue('city', city);
+                          if (locality) setFieldValue('locality', locality);
+                        } catch (error) {
+                          console.error('Error getting location:', error);
+                        }
+                      }
+                    }}
+                    value={values.latitude} 
+                    name="latitude" 
+                  />
+                </div>
+
+                {/* Longitude */}
+                <div className='flex gap-2 flex-col'>
+                  <h2 className='text-gray-500'>Longitude</h2>
+                  <Input 
+                    type="number" 
+                    step="any"
+                    placeholder="Ex. 77.7172" 
+                    onChange={async (e) => {
+                      handleChange(e);
+                      if (e.target.value && values.latitude) {
+                        try {
+                          const { city, locality } = await getCityAndLocalityFromCoordinates(values.latitude, e.target.value);
+                          if (city) setFieldValue('city', city);
+                          if (locality) setFieldValue('locality', locality);
+                        } catch (error) {
+                          console.error('Error getting location:', error);
+                        }
+                      }
+                    }}
+                    value={values.longitude} 
+                    name="longitude" 
+                  />
                 </div>
               </div>
 
