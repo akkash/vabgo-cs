@@ -16,7 +16,7 @@ import * as Yup from 'yup';
 const LocationSchema = Yup.object().shape({
     userType: Yup.string().required('Please select Owner or Agent'),
     contactname: Yup.string().required('Contact Name is required'),
-    email: Yup.string().email('Invalid email').required('Email is required'),
+    email: Yup.string().email('Invalid email'),
     address: Yup.string().required('Address is required'),
 });
 
