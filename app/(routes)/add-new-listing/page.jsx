@@ -14,7 +14,7 @@ import * as Yup from 'yup';
 
 // Define LocationSchema outside of the component
 const LocationSchema = Yup.object().shape({
-    userType: Yup.string().required('Please select Owner or Agent'),
+    ownerType: Yup.string().required('Please select Owner or Agent'),
     contactname: Yup.string().required('Contact Name is required'),
     email: Yup.string().email('Invalid email'),
     address: Yup.string().required('Address is required'),
@@ -50,7 +50,7 @@ function AddNewListing() {
                         contactname: values.contactname,
                         email: values.email,
                         createdBy: user?.phone,
-                        userType: values.userType,
+                        ownerType: values.ownerType,
                     },
                 ])
                 .select();
@@ -81,7 +81,7 @@ function AddNewListing() {
 
                     <Formik
                         initialValues={{
-                            userType: '',
+                            ownerType: '',
                             address: '',
                             contactname: '',
                             email: '',
@@ -98,7 +98,7 @@ function AddNewListing() {
                                         <label className='flex items-center gap-2'>
                                             <Field
                                                 type="radio"
-                                                name="userType"
+                                                name="ownerType"
                                                 value="owner"
                                                 className="form-radio text-blue-500"
                                             />
@@ -107,15 +107,15 @@ function AddNewListing() {
                                         <label className='flex items-center gap-2'>
                                             <Field
                                                 type="radio"
-                                                name="userType"
+                                                name="ownerType"
                                                 value="agent"
                                                 className="form-radio text-blue-500"
                                             />
                                             <span>Agent</span>
                                         </label>
                                     </div>
-                                    {errors.userType && touched.userType && (
-                                        <div className='text-red-500 text-sm mt-1'>{errors.userType}</div>
+                                    {errors.ownerType && touched.ownerType && (
+                                        <div className='text-red-500 text-sm mt-1'>{errors.ownerType}</div>
                                     )}
                                 </div>
 
