@@ -138,11 +138,14 @@ export default function EditListingForm({ initialListing }) {
       const title = generateTitle(values);
       const slug = generateSlug(values);
       
+      // Exclude latitude and longitude from the update
+      const { latitude, longitude, ...updateValues } = values;
+
       const { data, error } = await supabase
         .from('listing')
         .update({
-          ...values,
-          title,
+          ...updateValues,
+          property_title: title,
           slug,
           active: true
         })
@@ -151,7 +154,40 @@ export default function EditListingForm({ initialListing }) {
 
       if (error) throw error;
 
-      // Handle image upload here if needed
+      // Handle image upload
+      for (const image of images) {
+        setLoading(true);
+        const file = image;
+        const fileName = Date.now().toString();
+        const fileExt = fileName.split('.').pop();
+        const { data: uploadData, error: uploadError } = await supabase.storage
+          .from('listingImages')
+          .upload(`${fileName}`, file, {
+            contentType: `image/${fileExt}`,
+            upsert: false
+          });
+
+        if (uploadError) {
+          setLoading(false);
+          toast('Error while uploading images');
+        } else {
+          const imageUrl = process.env.NEXT_PUBLIC_IMAGE_URL + fileName;
+          const { data: insertData, error: insertError } = await supabase
+            .from('listingImages')
+            .insert([
+              { url: imageUrl, listing_id: initialListing.id }
+            ])
+            .select();
+
+          if (insertData) {
+            setLoading(false);
+          }
+          if (insertError) {
+            setLoading(false);
+          }
+        }
+        setLoading(false);
+      }
 
       toast('Listing updated successfully!');
       router.push('/');
@@ -228,6 +264,52 @@ export default function EditListingForm({ initialListing }) {
     setFieldValue('price_per_sqft', pricePerUnit);
   };
 
+  const nextHandler = async (values) => {
+    setLoader(true);
+    let coordinates = null;
+    if (values.latitude && values.longitude) {
+      coordinates = {
+        lat: parseFloat(values.latitude),
+        lng: parseFloat(values.longitude)
+      };
+    }
+    try {
+      let cityData = { city: "", locality: "" };
+      if (coordinates) {
+        try {
+          cityData = await getCityAndLocalityFromCoordinates(coordinates.lat, coordinates.lng);
+        } catch (geocodeError) {
+          console.error('Error getting city and locality:', geocodeError);
+          // Continue with empty city if geocoding fails
+        }
+      }
+      const { data, error } = await supabase
+        .from('listing')
+        .insert([
+          {
+            address: values.address,
+            contactname: values.contactname,
+            coordinates: coordinates,
+            email: values.email,
+            createdBy: user?.phone,
+            city: cityData.city,
+            locality: cityData.locality,
+            userType: values.userType,
+          },
+        ])
+        .select();
+
+      if (error) throw error;
+
+      // Handle success (e.g., navigate to another page or show a success message)
+    } catch (error) {
+      console.error('Error inserting listing:', error);
+      // Handle error (e.g., show an error message)
+    } finally {
+      setLoader(false);
+    }
+  };
+
   return (
     <div className='px-10 md:px-36 my-10'>
       <h2 className='font-bold text-2xl'>Enter some more details about your listing</h2>
@@ -243,7 +325,7 @@ export default function EditListingForm({ initialListing }) {
           property_ownership: initialListing.property_ownership || '',
           description: initialListing.description || '',
           expected_price: initialListing.expected_price || '',
-          build_up_area: initialListing.build_up_area || '',
+          built_up_area: initialListing.built_up_area || '',
           carpet_area: initialListing.carpet_area || '',
           lock_in_period: initialListing.lock_in_period || '',
           age_of_property: initialListing.age_of_property || '',
@@ -256,10 +338,10 @@ export default function EditListingForm({ initialListing }) {
           property_security: initialListing.property_security || '',
           latitude: initialListing.latitude || '',
           longitude: initialListing.longitude || '',
-          build_up_area_type: initialListing.build_up_area_type || 'Sq.Ft',
+          built_up_area_type: initialListing.built_up_area_type || 'Sq.Ft',
           carpet_area_type: initialListing.carpet_area_type || 'Sq.Ft',
-          super_build_up_area: initialListing.super_build_up_area || '',
-          super_build_up_area_type: initialListing.super_build_up_area_type || 'Sq.Ft',
+          super_built_up_area: initialListing.super_built_up_area || '',
+          super_built_up_area_type: initialListing.super_built_up_area_type || 'Sq.Ft',
           air_conditioning: initialListing.air_conditioning || '',
           oxygen_duct: initialListing.oxygen_duct || '',
           fire_safety: initialListing.fire_safety || '',
@@ -471,9 +553,13 @@ export default function EditListingForm({ initialListing }) {
                     placeholder="Ex. 11.3410" 
                     onChange={async (e) => {
                       handleChange(e);
-                      if (e.target.value && values.longitude) {
+                      const lat = e.target.value;
+                      const lng = values.longitude;
+                      setFieldValue('coordinates', { lat, lng });
+
+                      if (lat && lng) {
                         try {
-                          const { city, locality } = await getCityAndLocalityFromCoordinates(e.target.value, values.longitude);
+                          const { city, locality } = await getCityAndLocalityFromCoordinates(lat, lng);
                           if (city) setFieldValue('city', city);
                           if (locality) setFieldValue('locality', locality);
                         } catch (error) {
@@ -495,9 +581,13 @@ export default function EditListingForm({ initialListing }) {
                     placeholder="Ex. 77.7172" 
                     onChange={async (e) => {
                       handleChange(e);
-                      if (e.target.value && values.latitude) {
+                      const lng = e.target.value;
+                      const lat = values.latitude;
+                      setFieldValue('coordinates', { lat, lng });
+
+                      if (lat && lng) {
                         try {
-                          const { city, locality } = await getCityAndLocalityFromCoordinates(values.latitude, e.target.value);
+                          const { city, locality } = await getCityAndLocalityFromCoordinates(lat, lng);
                           if (city) setFieldValue('city', city);
                           if (locality) setFieldValue('locality', locality);
                         } catch (error) {
@@ -591,14 +681,14 @@ export default function EditListingForm({ initialListing }) {
                     <Input 
                       type="number" 
                       placeholder="Ex. 4000" 
-                      value={values.build_up_area} 
-                      name="build_up_area" 
+                      value={values.built_up_area} 
+                      name="built_up_area" 
                       onChange={handleChange}
                       className="w-[300px]"
                     />
                     <Select 
-                      onValueChange={(e) => setFieldValue('build_up_area_type', e)} 
-                      value={values.build_up_area_type}
+                      onValueChange={(e) => setFieldValue('built_up_area_type', e)} 
+                      value={values.built_up_area_type}
                     >
                       <SelectTrigger className="w-[150px]">
                         <SelectValue placeholder="Select Unit" />
@@ -642,14 +732,14 @@ export default function EditListingForm({ initialListing }) {
                     <Input 
                       type="number" 
                       placeholder="Ex. 5000" 
-                      value={values.super_build_up_area} 
-                      name="super_build_up_area" 
+                      value={values.super_built_up_area} 
+                      name="super_built_up_area" 
                       onChange={handleChange}
                       className="w-[300px]"
                     />
                     <Select 
-                      onValueChange={(e) => setFieldValue('super_build_up_area_type', e)} 
-                      value={values.super_build_up_area_type}
+                      onValueChange={(e) => setFieldValue('super_built_up_area_type', e)} 
+                      value={values.super_built_up_area_type}
                     >
                       <SelectTrigger className="w-[150px]">
                         <SelectValue placeholder="Select Unit" />
@@ -1168,7 +1258,7 @@ export default function EditListingForm({ initialListing }) {
               <div>
                 <h2 className='font-lg text-gray-500 my-2'>Upload Property Images</h2>
                 <FileUpload
-                  setImages={setImages}
+                  setImages={(value) => setImages(value)}
                   imageList={images}
                 />
               </div>

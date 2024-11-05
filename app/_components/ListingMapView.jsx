@@ -25,6 +25,7 @@ function ListingMapView() {
     const [isMobile, setIsMobile] = useState(false);
     const [sortBy, setSortBy] = useState('newest'); // Add at the top with other state declarations
     const [selectedCity, setSelectedCity] = useState(null);
+    const [isButtonVisible, setIsButtonVisible] = useState(false);
 
     useEffect(() => {
         getLatestListing();
@@ -204,13 +205,15 @@ function ListingMapView() {
                             className="w-full"
                         />
                     </div>
-                    <Button 
-                        className="flex gap-2 w-full sm:w-auto justify-center" 
-                        onClick={handleSearchClick}
-                    >
-                        <Search className='h-4 w-4'/> 
-                        Search
-                    </Button>
+                    {isButtonVisible && (
+                        <Button 
+                            className="flex gap-2 w-full sm:w-auto justify-center" 
+                            onClick={handleSearchClick}
+                        >
+                            <Search className='h-4 w-4'/> 
+                            Search
+                        </Button>
+                    )}
                 </div>
                 {selectedCity && (
                     <div className="px-3 mt-2 text-center"> {/* Added text-center */}
