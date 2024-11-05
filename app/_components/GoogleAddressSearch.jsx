@@ -44,7 +44,13 @@ function GoogleAddressSearch({selectedAddress, setCoordinates, setSelectedCity})
                                 }
                             })
                             .then(({lat, lng}) => {
-                                setCoordinates({lat, lng})
+                                // Check if lat and lng are numbers
+                                if (typeof lat === 'number' && typeof lng === 'number') {
+                                    setCoordinates({lat, lng});
+                                } else {
+                                    console.error('Invalid coordinates:', {lat, lng});
+                                    setCoordinates(null);
+                                }
                             })
                             .catch(error => console.error('Error', error));
                     } else {

@@ -21,8 +21,10 @@ function GoogleMapSection({coordinates,listing}) {
     //     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_PLACE_API_KEY
     //   })
       useEffect(()=>{
-        coordinates&&setCenter(coordinates)
-      },[coordinates])
+        if (coordinates && typeof coordinates.lat === 'number' && typeof coordinates.lng === 'number') {
+            setCenter(coordinates);
+        }
+    },[coordinates])
      
       useEffect(() => {
         if (map) {

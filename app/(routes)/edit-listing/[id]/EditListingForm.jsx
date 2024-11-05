@@ -137,6 +137,14 @@ export default function EditListingForm({ initialListing }) {
   const onSubmitHandler = async (values) => {
     setLoading(true);
     try {
+      // Parse latitude and longitude as numbers
+      const lat = parseFloat(values.latitude);
+      const lng = parseFloat(values.longitude);
+
+      if (isNaN(lat) || isNaN(lng)) {
+        throw new Error("Invalid latitude or longitude");
+      }
+
       // Generate title and slug before submitting
       const title = generateTitle(values);
       const slug = generateSlug(values);
@@ -150,7 +158,8 @@ export default function EditListingForm({ initialListing }) {
           ...updateValues,
           property_title: title,
           slug,
-          active: true
+          active: true,
+          coordinates: { lat, lng } // Ensure coordinates are valid
         })
         .eq('id', initialListing.id)
         .select();
@@ -224,7 +233,7 @@ export default function EditListingForm({ initialListing }) {
       "Godown"
     ]
     ,
-    "Land": [
+    "Land & Plots": [
       "Commercial Land",
       "Industrial Land",
       "Commercial Plot",

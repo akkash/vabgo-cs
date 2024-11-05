@@ -45,21 +45,29 @@ function FilterSection({
                 </SelectTrigger>
                 <SelectContent>
              
-                    <SelectItem value="Commercial Property">
+                    <SelectItem value="Commercial Office Space">
                         <h2 className='flex gap-2'>
-                             <Store className='h-5 w-5 text-primary'/>Commercial Property</h2>
+                             <Store className='h-5 w-5 text-primary'/>Commercial Office Space</h2>
                     </SelectItem>
-                    <SelectItem value="Factory & Industrial Building3">
+                    <SelectItem value="Commercial Retail Space">
                         <h2 className='flex gap-2'>
-                             <Factory className='h-5 w-5 text-primary'/>Factory & Industrial Building</h2>
+                             <Factory className='h-5 w-5 text-primary'/>Commercial Retail Space</h2>
+                    </SelectItem>
+                    <SelectItem value="Factory & Industrial">
+                        <h2 className='flex gap-2'>
+                             <Warehouse className='h-5 w-5 text-primary'/>Factory & Industrial</h2>
                     </SelectItem>
                     <SelectItem value="Warehouse & Cold Storage">
                         <h2 className='flex gap-2'>
-                             <Warehouse className='h-5 w-5 text-primary'/>Warehouse & Cold Storage</h2>
+                             <LandPlot className='h-5 w-5 text-primary'/>Warehouse & Cold Storage</h2>
                     </SelectItem>
                     <SelectItem value="Land & Plots">
                         <h2 className='flex gap-2'>
                              <LandPlot className='h-5 w-5 text-primary'/>Land & Plots</h2>
+                    </SelectItem>
+                    <SelectItem value="Others">
+                        <h2 className='flex gap-2'>
+                             <LandPlot className='h-5 w-5 text-primary'/>Others</h2>
                     </SelectItem>
                 </SelectContent>
                 </Select>

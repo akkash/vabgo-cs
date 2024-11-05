@@ -92,6 +92,14 @@ function ListingMapView() {
             if (error) throw error;
             setListing(data || []);
             
+            // Validate and set coordinates if available
+            if (coordinates && typeof coordinates.lat === 'number' && typeof coordinates.lng === 'number') {
+                setCoordinates(coordinates);
+            } else {
+                console.warn('Invalid coordinates:', coordinates);
+                setCoordinates(null); // or handle invalid coordinates appropriately
+            }
+            
         } catch (error) {
             console.error('Error in handleSearchClick:', error);
             toast.error('Failed to fetch listings');
