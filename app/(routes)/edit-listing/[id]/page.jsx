@@ -6,7 +6,6 @@ export async function generateStaticParams() {
   const { data: listings, error } = await supabase
     .from('listing')
     .select('id')
-    .eq('active', true)
 
   if (error) {
     console.error('Error fetching listings:', error)

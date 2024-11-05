@@ -122,6 +122,9 @@ export default function EditListingForm({ initialListing }) {
       parts.push(`${values.carpet_area}-${values.carpet_area_type}`);
     }
     
+    // Add current timestamp
+    parts.push(Date.now().toString());
+    
     // Convert to lowercase, replace spaces with hyphens, and remove special characters
     return parts.join(" ")
       .toLowerCase()
@@ -217,7 +220,16 @@ export default function EditListingForm({ initialListing }) {
     ],
     "Warehouse & Cold Storage": [
       "Warehouse",
-      "Cold Storage"
+      "Cold Storage",
+      "Godown"
+    ]
+    ,
+    "Land": [
+      "Commercial Land",
+      "Industrial Land",
+      "Commercial Plot",
+      "Industrial Plot",
+      "Agricultural Land"
     ]
     ,
     "Others": [

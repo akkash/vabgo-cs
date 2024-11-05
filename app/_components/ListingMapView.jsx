@@ -306,7 +306,7 @@ function ListingMapView() {
                                                     </h2>
                                                     <div className="flex items-center gap-2 mb-1">
                                                         <span className="text-base font-medium text-primary">
-                                                            ₹{item.price ? (typeof item.price === 'number' ? item.price.toLocaleString() : item.price) : 'N/A'}/mo
+                                                            ₹{item.expected_price ? (typeof item.expected_price === 'number' ? item.expected_price.toLocaleString() : item.expected_price) : 'N/A'}/mo
                                                         </span>
                                                     </div>
                                                 </div>

@@ -18,7 +18,7 @@ function Details({listingDetail}) {
     <div className='flex justify-between items-center'>
         <div>
             <h2 className='font-bold text-xl'>For : {listingDetail?.listing_type}</h2>
-            <h2 className='font-bold text-xl'>Price : {listingDetail?.price}₹</h2>
+            <h2 className='font-bold text-xl'>Price : {listingDetail?.expected_price}₹</h2>
             
         </div>
     </div>
