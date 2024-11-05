@@ -439,7 +439,7 @@ function ListingMapView() {
                         <div className="bg-primary/10 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4">
                             <span className="text-primary font-bold">3</span>
                         </div>
-                        <h3 className="font-semibold mb-2">Sell/Rent faster with instant Connect</h3>
+                        <h3 className="font-semibold mb-2">Buy/Rent faster with instant Connect</h3>
                         <p className="text-gray-600 text-sm">
                             Negotiate with your prospective Buyer/Tenant & mutually close the deal (site-visit)
                         </p>
@@ -511,7 +511,7 @@ function ListingMapView() {
                         >
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
                         </svg>
-                        <h3 className="text-xl font-bold mb-6">Benefits of Selling Your Property Online</h3>
+                        <h3 className="text-xl font-bold mb-6">Benefits of Buying Your Property Online</h3>
                         <div className="space-y-4">
                             <div className="flex items-start gap-3">
                                 <div className="mt-1">

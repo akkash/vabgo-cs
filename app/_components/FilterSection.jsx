@@ -26,7 +26,7 @@ function FilterSection({
                     </SelectTrigger>
                     <SelectContent>
                     
-                        <SelectItem value="Sell">
+                        <SelectItem value="Buy">
                             <h2 className='flex gap-2'>
                                  <ReceiptIndianRupee className='h-5 w-5 text-primary'/>Sell</h2>
                         </SelectItem>
