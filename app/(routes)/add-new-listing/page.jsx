@@ -77,7 +77,7 @@ function AddNewListing() {
         <div>
             <div className='mt-10 md:mx-10 lg:mx-10'>
                 <div className='p-10 flex flex-col gap-5 items-center justify-center'>
-                    <h2 className='font-bold text-3xl'>Buy or Rent Your Commercial Property at <span className="text-blue-500">199₹</span> with Vabgo.com.</h2>
+                    <h2 className='font-bold text-3xl'>Sell or Rent Your Commercial Property at <span className="text-blue-500">199₹</span> with Vabgo.com.</h2>
 
                     <Formik
                         initialValues={{

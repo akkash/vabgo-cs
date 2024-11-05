@@ -28,7 +28,7 @@ function FilterSection({
                     
                         <SelectItem value="Buy">
                             <h2 className='flex gap-2'>
-                                 <ReceiptIndianRupee className='h-5 w-5 text-primary'/>Sell</h2>
+                                 <ReceiptIndianRupee className='h-5 w-5 text-primary'/>Buy</h2>
                         </SelectItem>
                         <SelectItem value="Rent">
                             <h2 className='flex gap-2'>

@@ -397,11 +397,11 @@ export default function EditListingForm({ initialListing }) {
                         <button
                           type="button"
                           className={`px-6 py-2 rounded-md ${
-                            values.listing_type === 'Sell'
+                            values.listing_type === 'Buy'
                               ? 'bg-primary text-white'
                               : 'bg-gray-100 hover:bg-gray-200'
                           }`}
-                          onClick={() => setFieldValue('listing_type', 'Sell')}
+                          onClick={() => setFieldValue('listing_type', 'Buy')}
                         >
                           Sell
                         </button>
