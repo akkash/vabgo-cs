@@ -53,7 +53,7 @@ function Details({listingDetail}) {
             <h2 className='flex gap-2 items-center justify-center bg-blue-100
      rounded-lg p-3 text-primary'>
                 <Drill />
-                Built Up Area  {listingDetail?.build_up_area} SqFt 
+                Built Up Area  {listingDetail?.built_up_area} SqFt 
             </h2>
             <h2 className='flex gap-2 items-center justify-center bg-blue-100 rounded-lg p-3 text-primary'>
                 <LandPlot /> Carpet Area {listingDetail?.carpet_area} Sqft

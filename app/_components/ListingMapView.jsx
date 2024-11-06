@@ -168,10 +168,10 @@ function ListingMapView() {
                     query = query.order('created_at', { ascending: true });
                     break;
                 case 'area-asc':
-                    query = query.order('build_up_area', { ascending: true });
+                    query = query.order('carpet_area', { ascending: true });
                     break;
                 case 'area-desc':
-                    query = query.order('build_up_area', { ascending: false });
+                    query = query.order('carpet_area', { ascending: false });
                     break;
                 default:
                     query = query.order('id', { ascending: false });
@@ -325,7 +325,7 @@ function ListingMapView() {
                                                 <div className="flex items-center gap-4 text-sm text-gray-600">
                                                         <span>{item.property_type}</span>
                                                         <span>•</span>
-                                                        <span>Built-up Area: {item.build_up_area ? (typeof item.build_up_area === 'number' ? item.build_up_area.toLocaleString() : item.build_up_area) : 'N/A'} sqft</span>
+                                                        <span>Built-up Area: {item.built_up_area ? (typeof item.built_up_area === 'number' ? item.built_up_area.toLocaleString() : item.built_up_area) : 'N/A'} sqft</span>
                                                         <span>•</span>
                                                         <span>Carpet Area: {item.carpet_area ? (typeof item.carpet_area === 'number' ? item.carpet_area.toLocaleString() : item.carpet_area) : 'N/A'} sqft</span>
                                                     </div>
