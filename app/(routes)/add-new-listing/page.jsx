@@ -26,15 +26,28 @@ function AddNewListing() {
     const router = useRouter();
 
     useEffect(() => {
-        // Load Google Maps API script
+        // Check if the script is already loaded
+        if (window.google) {
+            return;
+        }
+
+        // Load Google Maps API script only if not already present
         const script = document.createElement('script');
         script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&libraries=places`;
         script.async = true;
         script.defer = true;
+        
+        // Add an ID to identify the script
+        script.id = 'google-maps-script';
+        
         document.head.appendChild(script);
 
         return () => {
-            document.head.removeChild(script);
+            // Only remove the script if we added it
+            const scriptElement = document.getElementById('google-maps-script');
+            if (scriptElement) {
+                document.head.removeChild(scriptElement);
+            }
         };
     }, []);
 
