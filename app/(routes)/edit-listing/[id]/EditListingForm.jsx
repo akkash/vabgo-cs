@@ -42,22 +42,26 @@ export default function EditListingForm({ initialListing }) {
           console.log("Geocoding results:", results);
           let city = "";
           let locality = "";
+          let sub_locality = "";
 
           if (results[0]) {
             for (let result of results) {
               for (let component of result.address_components) {
+                if (component.types.includes("sublocality")) {
+                  sub_locality = component.long_name;
+                }
                 if (component.types.includes("administrative_area_level_3")) {
                   city = component.long_name;
                 }
-                if (component.types.includes("administrative_area_level_4")) {
+                if (component.types.includes("locality")) {
                   locality = component.long_name;
                 }
-                if (city && locality) break;
+                if (city && (sub_locality || locality)) break;
               }
-              if (city && locality) break;
+              if (city && (sub_locality || locality)) break;
             }
           }
-          resolve({ city, locality });
+          resolve({ sub_locality,city, locality });
         } else {
           reject("Geocoder failed due to: " + status);
         }
@@ -80,11 +84,20 @@ export default function EditListingForm({ initialListing }) {
     }
     
     // Add location
-    if (values.locality || values.city) {
+    if (values.sub_locality || values.locality || values.city) {
       parts.push("in");
-      if (values.locality) parts.push(values.locality);
-      if (values.locality && values.city) parts.push(",");
-      if (values.city) parts.push(values.city);
+      if (values.sub_locality) {
+        // If sub_locality exists, use sub_locality and city
+        parts.push(values.sub_locality);
+        if (values.city) {
+          parts.push(",", values.city);
+        }
+      } else {
+        // Otherwise use locality and city
+        if (values.locality) parts.push(values.locality);
+        if (values.locality && values.city) parts.push(",");
+        if (values.city) parts.push(values.city);
+      }
     }
     
     // Add area
@@ -110,11 +123,20 @@ export default function EditListingForm({ initialListing }) {
     }
     
     // Add location
-    if (values.locality || values.city) {
+    if (values.sub_locality || values.locality || values.city) {
       parts.push("in");
-      if (values.locality) parts.push(values.locality);
-      if (values.locality && values.city) parts.push(",");
-      if (values.city) parts.push(values.city);
+      if (values.sub_locality) {
+        // If sub_locality exists, use sub_locality and city
+        parts.push(values.sub_locality);
+        if (values.city) {
+          parts.push(",", values.city);
+        }
+      } else {
+        // Otherwise use locality and city
+        if (values.locality) parts.push(values.locality);
+        if (values.locality && values.city) parts.push(",");
+        if (values.city) parts.push(values.city);
+      }
     }
     
     // Add area
@@ -295,7 +317,7 @@ export default function EditListingForm({ initialListing }) {
       };
     }
     try {
-      let cityData = { city: "", locality: "" };
+      let cityData = { city: "", locality: "",sub_locality: "" };
       if (coordinates) {
         try {
           cityData = await getCityAndLocalityFromCoordinates(coordinates.lat, coordinates.lng);
@@ -315,6 +337,7 @@ export default function EditListingForm({ initialListing }) {
             createdBy: user?.phone,
             city: cityData.city,
             locality: cityData.locality,
+            sub_locality: cityData.sub_locality,
             userType: values.userType,
           },
         ])
@@ -340,6 +363,7 @@ export default function EditListingForm({ initialListing }) {
           listing_type: initialListing.listing_type || '',
           city: initialListing.city || '',
           locality: initialListing.locality || '',
+          sub_locality: initialListing.sub_locality || '',
           property_type: initialListing.property_type || '',
           sub_property_type: initialListing.sub_property_type || '',
           location_type: initialListing.location_type || '',
@@ -565,6 +589,19 @@ export default function EditListingForm({ initialListing }) {
                   />
                 </div>
 
+              {/* Locality */}
+                <div className='flex gap-2 flex-col max-w-[300px]'>
+                  <h2 className='text-gray-500'>Sub Locality</h2>
+                  <Input 
+                    type="text" 
+                    placeholder="Erode" 
+                    onChange={handleChange} 
+                    value={values.sub_locality} 
+                    name="sub_locality"
+                    className="w-[300px]"
+                  />
+                </div>
+
                                 {/* Latitude */}
                                 <div className='flex gap-2 flex-col max-w-[300px]'>
                   <h2 className='text-gray-500'>Latitude</h2>
@@ -580,9 +617,10 @@ export default function EditListingForm({ initialListing }) {
 
                       if (lat && lng) {
                         try {
-                          const { city, locality } = await getCityAndLocalityFromCoordinates(lat, lng);
+                          const { city, locality ,sub_locality} = await getCityAndLocalityFromCoordinates(lat, lng);
                           if (city) setFieldValue('city', city);
                           if (locality) setFieldValue('locality', locality);
+                          if (sub_locality) setFieldValue('sub_locality', sub_locality);
                         } catch (error) {
                           console.error('Error getting location:', error);
                         }
@@ -608,9 +646,10 @@ export default function EditListingForm({ initialListing }) {
 
                       if (lat && lng) {
                         try {
-                          const { city, locality } = await getCityAndLocalityFromCoordinates(lat, lng);
+                          const { city, locality,sub_locality } = await getCityAndLocalityFromCoordinates(lat, lng);
                           if (city) setFieldValue('city', city);
                           if (locality) setFieldValue('locality', locality);
+                          if (sub_locality) setFieldValue('sub_locality', sub_locality);
                         } catch (error) {
                           console.error('Error getting location:', error);
                         }

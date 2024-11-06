@@ -24,7 +24,8 @@ function ListingMapView() {
     const [showMap, setShowMap] = useState(true);
     const [isMobile, setIsMobile] = useState(false);
     const [sortBy, setSortBy] = useState('newest'); // Add at the top with other state declarations
-    const [selectedCity, setSelectedCity] = useState(null);
+    const [SubLocality, setSubLocality] = useState(null);
+    const [SelectedLocality, setSelectedLocality] = useState(null);
     const [isButtonVisible, setIsButtonVisible] = useState(false);
 
     useEffect(() => {
@@ -38,6 +39,12 @@ function ListingMapView() {
     useEffect(() => {
         handleSearchClick();
     }, [listingType, propertyType]);
+
+    useEffect(() => {
+        if (SelectedLocality || SubLocality) {
+            handleSearchClick();
+        }
+    }, [SelectedLocality, SubLocality]);
 
     const getLatestListing = async () => {
         try {
@@ -82,9 +89,21 @@ function ListingMapView() {
                 query = query.eq('property_type', propertyType)
             }
 
-            // Add city filter if available
-            if (selectedCity) {
-                query = query.ilike('city', `%${selectedCity}%`)
+            if (SelectedLocality || SubLocality) {
+                const locationFilters = []
+                
+                if (SelectedLocality) {
+                    locationFilters.push(
+                        `city.ilike.%${SelectedLocality}%`,
+                        `locality.ilike.%${SelectedLocality}%`
+                    )
+                }
+                
+                if (SubLocality) {
+                    locationFilters.push(`sub_locality.ilike.%${SubLocality}%`)
+                }
+
+                query = query.or(locationFilters.join(','))
             }
 
             const { data, error } = await query.order('id', { ascending: false });
@@ -105,13 +124,6 @@ function ListingMapView() {
             toast.error('Failed to fetch listings');
         }
     }
-
-    // Trigger search when city changes
-    useEffect(() => {
-        if (selectedCity) {
-            handleSearchClick();
-        }
-    }, [selectedCity]);
 
     const toggleView = () => {
         setShowMap(!showMap);
@@ -209,7 +221,8 @@ function ListingMapView() {
                         <GoogleAddressSearch
                             selectedAddress={setSearchedAddress}
                             setCoordinates={setCoordinates}
-                            setSelectedCity={setSelectedCity}
+                            setSelectedLocality={setSelectedLocality}
+                            setSubLocality={setSubLocality}
                             className="w-full"
                         />
                     </div>
@@ -223,10 +236,10 @@ function ListingMapView() {
                         </Button>
                     )}
                 </div>
-                {selectedCity && (
-                    <div className="px-3 mt-2 text-center"> {/* Added text-center */}
+                {(SelectedLocality || SubLocality) && (
+                    <div className="px-3 mt-2 text-center">
                         <span className="text-sm text-muted-foreground">
-                            Showing results for: {selectedCity}
+                            Showing results for: {SelectedLocality || SubLocality}
                         </span>
                     </div>
                 )}

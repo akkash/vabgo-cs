@@ -3,7 +3,7 @@ import { MapPin } from 'lucide-react';
 import * as React from 'react';
 import GooglePlacesAutocomplete, { geocodeByAddress, getLatLng } from 'react-google-places-autocomplete'
 
-function GoogleAddressSearch({selectedAddress, setCoordinates, setSelectedCity}) {
+function GoogleAddressSearch({selectedAddress, setCoordinates, setSelectedLocality, setSubLocality}) {
   return (
     // Added flex-col for mobile and sm:flex-row for larger screens
     // Added gap-2 for spacing between elements
@@ -22,22 +22,28 @@ function GoogleAddressSearch({selectedAddress, setCoordinates, setSelectedCity})
                         // Get city from address components
                         geocodeByAddress(place.label)
                             .then(results => {
+                                console.log("Geocoding results:", results);
                                 if (results[0]) {
                                     // Extract city from address components
                                     const addressComponents = results[0].address_components;
-                                    let city = null;
+                                    let locality = null;
+                                    let sublocality = null;
                                     
                                     for (let component of addressComponents) {
                                         if (component.types.includes('locality')) {
-                                            city = component.long_name;
-                                            break;
+                                            locality = component.long_name;
+                                        }
+                                        if (component.types.includes('sublocality')) {
+                                            sublocality = component.long_name;
                                         }
                                     }
                                     
-                                    // Set city if found
-                                    if (city) {
-                                        setSelectedCity(city);
-                                    }
+                                    console.log('Locality:', locality);
+                                    console.log('Sublocality:', sublocality);
+                                    
+                                    // Set the more specific location (sublocality if available, otherwise locality)
+                                    setSelectedLocality(locality || null);
+                                    setSubLocality(sublocality || null);
 
                                     // Get coordinates
                                     return getLatLng(results[0]);
@@ -57,7 +63,8 @@ function GoogleAddressSearch({selectedAddress, setCoordinates, setSelectedCity})
                         // Handle the case when place is cleared or invalid
                         selectedAddress(null);
                         setCoordinates(null);
-                        setSelectedCity(null);
+                        setSelectedLocality(null);
+                        setSubLocality(null);
                     }
                 }
             }}
