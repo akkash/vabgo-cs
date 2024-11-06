@@ -1,6 +1,5 @@
 import { createClient } from '@supabase/supabase-js'
 import EditListingForm from './EditListingForm'
-import ListingNotFound from './not-found'
 export const revalidate = 3600 // Revalidate every hour (time in seconds)
 
 export async function generateStaticParams() {
