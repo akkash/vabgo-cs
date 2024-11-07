@@ -107,24 +107,28 @@ function AddNewListing() {
                                 <div className='flex gap-2 flex-col mb-6'>
                                     <label className='block text-sm font-medium text-gray-700'>I am</label>
                                     <div className='flex gap-4'>
-                                        <label className='flex items-center gap-2'>
-                                            <Field
-                                                type="radio"
-                                                name="ownerType"
-                                                value="owner"
-                                                className="form-radio text-blue-500"
-                                            />
-                                            <span>Owner</span>
-                                        </label>
-                                        <label className='flex items-center gap-2'>
-                                            <Field
-                                                type="radio"
-                                                name="ownerType"
-                                                value="agent"
-                                                className="form-radio text-blue-500"
-                                            />
-                                            <span>Agent</span>
-                                        </label>
+                                        <button
+                                            type="button"
+                                            onClick={() => setFieldValue('ownerType', 'owner')}
+                                            className={`px-4 py-2 rounded-md ${
+                                                values.ownerType === 'owner'
+                                                    ? 'bg-blue-500 text-white'
+                                                    : 'bg-white text-gray-700 border border-gray-300'
+                                            }`}
+                                        >
+                                            Owner
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={() => setFieldValue('ownerType', 'agent')}
+                                            className={`px-4 py-2 rounded-md ${
+                                                values.ownerType === 'agent'
+                                                    ? 'bg-blue-500 text-white'
+                                                    : 'bg-white text-gray-700 border border-gray-300'
+                                            }`}
+                                        >
+                                            Agent
+                                        </button>
                                     </div>
                                     {errors.ownerType && touched.ownerType && (
                                         <div className='text-red-500 text-sm mt-1'>{errors.ownerType}</div>
