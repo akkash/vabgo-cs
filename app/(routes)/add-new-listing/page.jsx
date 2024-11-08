@@ -23,6 +23,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Plus } from 'lucide-react';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog"
 
 // Define LocationSchema outside of the component
 const LocationSchema = Yup.object().shape({
@@ -36,6 +44,92 @@ const LocationSchema = Yup.object().shape({
     description: Yup.string().required('Description is required'),
 });
 
+// Add these functions before the nextHandler
+const generateTitle = (values) => {
+    const parts = [];
+    
+    // Add sub property type
+    if (values.sub_property_type) {
+        parts.push(values.sub_property_type);
+    }
+    
+    // Add listing type
+    if (values.listing_type) {
+        parts.push("for", values.listing_type);
+    }
+    
+    // Add location
+    if (values.sub_locality || values.locality || values.city) {
+        parts.push("in");
+        if (values.sub_locality) {
+            // If sub_locality exists, use sub_locality and city
+            parts.push(values.sub_locality);
+            if (values.city) {
+                parts.push(",", values.city);
+            }
+        } else {
+            // Otherwise use locality and city
+            if (values.locality) parts.push(values.locality);
+            if (values.locality && values.city) parts.push(",");
+            if (values.city) parts.push(values.city);
+        }
+    }
+    
+    // Add area
+    if (values.carpet_area && values.carpet_area_type) {
+        parts.push(`${values.carpet_area} ${values.carpet_area_type}`);
+    }
+    
+    return parts.join(" ");
+};
+
+const generateSlug = (values) => {
+    const parts = [];
+    
+    // Add sub property type
+    if (values.sub_property_type) {
+        parts.push(values.sub_property_type);
+    }
+    
+    // Add listing type
+    if (values.listing_type) {
+        parts.push("for", values.listing_type);
+    }
+    
+    // Add location
+    if (values.sub_locality || values.locality || values.city) {
+        parts.push("in");
+        if (values.sub_locality) {
+            // If sub_locality exists, use sub_locality and city
+            parts.push(values.sub_locality);
+            if (values.city) {
+                parts.push(",", values.city);
+            }
+        } else {
+            // Otherwise use locality and city
+            if (values.locality) parts.push(values.locality);
+            if (values.locality && values.city) parts.push(",");
+            if (values.city) parts.push(values.city);
+        }
+    }
+    
+    // Add area
+    if (values.carpet_area && values.carpet_area_type) {
+        parts.push(`${values.carpet_area}-${values.carpet_area_type}`);
+    }
+    
+    // Add current timestamp
+    parts.push(Date.now().toString());
+    
+    // Convert to lowercase, replace spaces with hyphens, and remove special characters
+    return parts.join(" ")
+        .toLowerCase()
+        .replace(/[^a-z0-9\s-]/g, '') // Remove special characters except hyphens
+        .replace(/\s+/g, '-')         // Replace spaces with hyphens
+        .replace(/-+/g, '-')          // Replace multiple hyphens with single hyphen
+        .trim();                      // Remove leading/trailing spaces or hyphens
+};
+
 function AddNewListing() {
     console.log("Google Maps API Key:", process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY);
     const { user } = useAuth();  // Use the useAuth hook
@@ -43,6 +137,7 @@ function AddNewListing() {
     const router = useRouter();
     const supabase = createClientComponentClient();
     const [images, setImages] = useState([]);
+    const [showSuccessDialog, setShowSuccessDialog] = useState(false);
 
     useEffect(() => {
         // Check if the script is already loaded
@@ -123,10 +218,17 @@ function AddNewListing() {
                 }
             }
 
-            const { data, error } = await supabase
+            // Generate title and slug
+            const title = generateTitle(values);
+            const slug = generateSlug(values);
+
+            // First, insert the listing
+            const { data: listingData, error: listingError } = await supabase
                 .from('listing')
                 .insert([
                     {
+                        title,
+                        slug,
                         address: values.address,
                         contactname: values.contactname,
                         coordinates: coordinates,
@@ -170,16 +272,40 @@ function AddNewListing() {
                 ])
                 .select();
 
-            if (data) {
+            if (listingError) {
                 setLoader(false);
-                toast.success("Your property listing has been submitted successfully. The Vabgo team will verify and publish it soon.");
-                router.replace('/');
-            }
-            if (error) {
-                setLoader(false);
-                console.log('Error', error);
+                console.log('Error', listingError);
                 toast.error("Server side error");
+                return;
             }
+
+            // If we have images and the listing was created successfully, insert the images
+            if (images.length > 0 && listingData?.[0]?.id) {
+                const imageInsertPromises = images.map(async (image, index) => {
+                    const { data: imageData, error: imageError } = await supabase
+                        .from('listingImages')
+                        .insert([
+                            {
+                                listing_id: listingData[0].id,
+                                image_url: image.url,
+                                image_path: image.path,
+                                is_primary: index === 0 // First image is primary
+                            }
+                        ]);
+
+                    if (imageError) {
+                        console.error('Error inserting image:', imageError);
+                        return null;
+                    }
+                    return imageData;
+                });
+
+                await Promise.all(imageInsertPromises);
+            }
+
+            setLoader(false);
+            setShowSuccessDialog(true);
+
         } catch (error) {
             setLoader(false);
             console.log('Error:', error);
@@ -1233,6 +1359,35 @@ function AddNewListing() {
                     </div>
                 </div>
             </div>
+
+            {/* Success Dialog */}
+            <Dialog open={showSuccessDialog} onOpenChange={(open) => {
+                setShowSuccessDialog(open);
+                if (!open) {
+                    router.replace('/');
+                }
+            }}>
+                <DialogContent className="sm:max-w-md">
+                    <DialogHeader>
+                        <DialogTitle>Listing Submitted Successfully!</DialogTitle>
+                        <DialogDescription>
+                            Your property listing has been submitted successfully. The Vabgo team will verify and publish it soon.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <DialogFooter className="sm:justify-center">
+                        <Button
+                            type="button"
+                            variant="default"
+                            onClick={() => {
+                                setShowSuccessDialog(false);
+                                router.replace('/');
+                            }}
+                        >
+                            Go to Homepage
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }

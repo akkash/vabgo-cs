@@ -27,6 +27,10 @@ export default function EditListingForm({ initialListing }) {
   const [loading, setLoading] = useState(false);
   const supabase = createClientComponentClient()
 
+  // Extract coordinates from initialListing
+  const initialLatitude = initialListing.coordinates?.lat || '';
+  const initialLongitude = initialListing.coordinates?.lng || '';
+
   const getCityAndLocalityFromCoordinates = async (lat, lng) => {
     return new Promise((resolve, reject) => {
       if (!window.google || !window.google.maps) {
@@ -167,22 +171,35 @@ export default function EditListingForm({ initialListing }) {
         throw new Error("Invalid latitude or longitude");
       }
 
-      // Generate title and slug before submitting
-      const title = generateTitle(values);
-      const slug = generateSlug(values);
-      
+      // Check if relevant fields have changed
+      const titleRelatedFieldsChanged = [
+        'sub_property_type',
+        'listing_type',
+        'locality',
+        'city',
+        'sub_locality',
+        'carpet_area',
+        'carpet_area_type'
+      ].some(field => values[field] !== initialListing[field]);
+
       // Exclude latitude and longitude from the update
       const { latitude, longitude, ...updateValues } = values;
 
+      // Only include title and slug in the update if relevant fields changed
+      const updateObject = {
+        ...updateValues,
+        active: true,
+        coordinates: { lat, lng }
+      };
+
+      if (titleRelatedFieldsChanged) {
+        updateObject.property_title = generateTitle(values);
+        updateObject.slug = generateSlug(values);
+      }
+
       const { data, error } = await supabase
         .from('listing')
-        .update({
-          ...updateValues,
-          property_title: title,
-          slug,
-          active: true,
-          coordinates: { lat, lng } // Ensure coordinates are valid
-        })
+        .update(updateObject)
         .eq('id', initialListing.id)
         .select();
 
@@ -381,8 +398,8 @@ export default function EditListingForm({ initialListing }) {
           washroom: initialListing.washroom || '',
           water: initialListing.water || '',
           property_security: initialListing.property_security || '',
-          latitude: initialListing.latitude || '',
-          longitude: initialListing.longitude || '',
+          latitude: initialLatitude,
+          longitude: initialLongitude,
           built_up_area_type: initialListing.built_up_area_type || 'Sq.Ft',
           carpet_area_type: initialListing.carpet_area_type || 'Sq.Ft',
           super_built_up_area: initialListing.super_built_up_area || '',
@@ -563,6 +580,63 @@ export default function EditListingForm({ initialListing }) {
                 </div>
 
 
+                                                {/* Latitude */}
+                                                <div className='flex gap-2 flex-col max-w-[300px]'>
+                  <h2 className='text-gray-500'>Latitude</h2>
+                  <Input 
+                    type="number" 
+                    step="any"
+                    placeholder="Ex. 11.3410" 
+                    onChange={async (e) => {
+                      handleChange(e);
+                      const lat = e.target.value;
+                      const lng = values.longitude;
+
+                      if (lat && lng) {
+                        try {
+                          const { city, locality, sub_locality } = await getCityAndLocalityFromCoordinates(lat, lng);
+                          if (city) setFieldValue('city', city);
+                          if (locality) setFieldValue('locality', locality);
+                          if (sub_locality) setFieldValue('sub_locality', sub_locality);
+                        } catch (error) {
+                          console.error('Error getting location:', error);
+                        }
+                      }
+                    }}
+                    value={values.latitude} 
+                    name="latitude" 
+                  />
+                </div>
+
+                {/* Longitude */}
+                <div className='flex gap-2 flex-col max-w-[300px]'>
+                  <h2 className='text-gray-500'>Longitude</h2>
+                  <Input 
+                    type="number" 
+                    step="any"
+                    placeholder="Ex. 77.7172" 
+                    onChange={async (e) => {
+                      handleChange(e);
+                      const lng = e.target.value;
+                      const lat = values.latitude;
+
+                      if (lat && lng) {
+                        try {
+                          const { city, locality, sub_locality } = await getCityAndLocalityFromCoordinates(lat, lng);
+                          if (city) setFieldValue('city', city);
+                          if (locality) setFieldValue('locality', locality);
+                          if (sub_locality) setFieldValue('sub_locality', sub_locality);
+                        } catch (error) {
+                          console.error('Error getting location:', error);
+                        }
+                      }
+                    }}
+                    value={values.longitude} 
+                    name="longitude" 
+                  />
+                </div>
+
+
                 {/* City */}
                 <div className='flex gap-2 flex-col max-w-[300px]'>
                   <h2 className='text-gray-500'>City</h2>
@@ -589,7 +663,7 @@ export default function EditListingForm({ initialListing }) {
                   />
                 </div>
 
-              {/* Locality */}
+              {/* Sub Locality */}
                 <div className='flex gap-2 flex-col max-w-[300px]'>
                   <h2 className='text-gray-500'>Sub Locality</h2>
                   <Input 
@@ -599,64 +673,6 @@ export default function EditListingForm({ initialListing }) {
                     value={values.sub_locality} 
                     name="sub_locality"
                     className="w-[300px]"
-                  />
-                </div>
-
-                                {/* Latitude */}
-                                <div className='flex gap-2 flex-col max-w-[300px]'>
-                  <h2 className='text-gray-500'>Latitude</h2>
-                  <Input 
-                    type="number" 
-                    step="any"
-                    placeholder="Ex. 11.3410" 
-                    onChange={async (e) => {
-                      handleChange(e);
-                      const lat = e.target.value;
-                      const lng = values.longitude;
-                      setFieldValue('coordinates', { lat, lng });
-
-                      if (lat && lng) {
-                        try {
-                          const { city, locality ,sub_locality} = await getCityAndLocalityFromCoordinates(lat, lng);
-                          if (city) setFieldValue('city', city);
-                          if (locality) setFieldValue('locality', locality);
-                          if (sub_locality) setFieldValue('sub_locality', sub_locality);
-                        } catch (error) {
-                          console.error('Error getting location:', error);
-                        }
-                      }
-                    }}
-                    value={values.latitude} 
-                    name="latitude" 
-                  />
-                </div>
-
-                {/* Longitude */}
-                <div className='flex gap-2 flex-col max-w-[300px]'>
-                  <h2 className='text-gray-500'>Longitude</h2>
-                  <Input 
-                    type="number" 
-                    step="any"
-                    placeholder="Ex. 77.7172" 
-                    onChange={async (e) => {
-                      handleChange(e);
-                      const lng = e.target.value;
-                      const lat = values.latitude;
-                      setFieldValue('coordinates', { lat, lng });
-
-                      if (lat && lng) {
-                        try {
-                          const { city, locality,sub_locality } = await getCityAndLocalityFromCoordinates(lat, lng);
-                          if (city) setFieldValue('city', city);
-                          if (locality) setFieldValue('locality', locality);
-                          if (sub_locality) setFieldValue('sub_locality', sub_locality);
-                        } catch (error) {
-                          console.error('Error getting location:', error);
-                        }
-                      }
-                    }}
-                    value={values.longitude} 
-                    name="longitude" 
                   />
                 </div>
 
