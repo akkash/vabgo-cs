@@ -23,14 +23,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Plus } from 'lucide-react';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogFooter,
-} from "@/components/ui/dialog"
+import { X } from 'lucide-react';
 
 // Define LocationSchema outside of the component
 const LocationSchema = Yup.object().shape({
@@ -1361,33 +1354,40 @@ function AddNewListing() {
             </div>
 
             {/* Success Dialog */}
-            <Dialog open={showSuccessDialog} onOpenChange={(open) => {
-                setShowSuccessDialog(open);
-                if (!open) {
-                    router.replace('/');
-                }
-            }}>
-                <DialogContent className="sm:max-w-md">
-                    <DialogHeader>
-                        <DialogTitle>Listing Submitted Successfully!</DialogTitle>
-                        <DialogDescription>
-                            Your property listing has been submitted successfully. The Vabgo team will verify and publish it soon.
-                        </DialogDescription>
-                    </DialogHeader>
-                    <DialogFooter className="sm:justify-center">
-                        <Button
-                            type="button"
-                            variant="default"
+            {showSuccessDialog && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                    <div className="bg-white p-6 rounded-lg max-w-md w-full">
+                        <button 
                             onClick={() => {
                                 setShowSuccessDialog(false);
                                 router.replace('/');
-                            }}
+                            }} 
+                            className="float-right text-gray-500 hover:text-gray-700"
                         >
-                            Go to Homepage
-                        </Button>
-                    </DialogFooter>
-                </DialogContent>
-            </Dialog>
+                            <X size={24} />
+                        </button>
+                        
+                        <div className="text-center mt-4">
+                            <h2 className="text-xl font-semibold mb-2">
+                                Listing Submitted Successfully!
+                            </h2>
+                            <p className="text-gray-600 mb-6">
+                                Your property listing has been submitted successfully. The Vabgo team will verify and publish it soon.
+                            </p>
+                            <Button
+                                type="button"
+                                variant="default"
+                                onClick={() => {
+                                    setShowSuccessDialog(false);
+                                    router.replace('/');
+                                }}
+                            >
+                                Go to Homepage
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
