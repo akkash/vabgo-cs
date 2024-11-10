@@ -1,30 +1,21 @@
-export default async function sitemap() {
-  // Get your dynamic routes/pages here
-  const listings = await fetch('your-api-endpoint/listings').then(res => res.json())
+export const dynamic = 'force-static'
+export const revalidate = 3600 // revalidate every hour
 
-  const listingsUrls = listings.map(listing => ({
-    url: `${process.env.SITE_URL}/commercial/${listing.slug}`,
-    lastModified: new Date(),
-    changeFrequency: 'daily',
-    priority: 0.7,
-  }))
+export default async function sitemap() {
+  const baseUrl = process.env.SITE_URL || 'https://vabgo.com'
 
   // Add your static routes
-  const staticPages = [
-    {
-      url: `${process.env.SITE_URL}`,
-      lastModified: new Date(),
-      changeFrequency: 'daily',
-      priority: 1,
-    },
-    {
-      url: `${process.env.SITE_URL}/about`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.8,
-    },
-    // Add more static pages as needed
+  const routes = [
+    '',
+    '/about',
+    '/contact',
+    // add more static routes
   ]
 
-  return [...staticPages, ...listingsUrls]
+  return routes.map((route) => ({
+    url: `${baseUrl}${route}`,
+    lastModified: new Date().toISOString(),
+    changeFrequency: 'daily',
+    priority: 1,
+  }))
 } 
