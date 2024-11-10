@@ -1,6 +1,6 @@
 /** @type {import('next-sitemap').IConfig} */
 module.exports = {
-  siteUrl: process.env.SITE_URL || 'https://yourdomain.com',
+  siteUrl: process.env.SITE_URL || 'https://vabgo.com',
   generateRobotsTxt: true,
   exclude: ['/admin/*', '/api/*'], // Add paths you want to exclude
   generateIndexSitemap: true,
