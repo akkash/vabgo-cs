@@ -10,21 +10,39 @@ const containerStyle = {
   
 
 function GoogleMapSection({coordinates,listing}) {
-   
-    const [center,setCenter]=useState({
+    const defaultCenter = {
         lat: 11.342423,
         lng: 77.728165
-      })
-      const [map, setMap] = useState(null)
+    };
+   
+    const [center, setCenter] = useState(defaultCenter);
+    const [map, setMap] = useState(null)
     //   const { isLoaded } = useJsApiLoader({
     //     id: 'google-map-script',
     //     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_PLACE_API_KEY
     //   })
-      useEffect(()=>{
+      useEffect(() => {
+        // First check if coordinates prop is provided
         if (coordinates && typeof coordinates.lat === 'number' && typeof coordinates.lng === 'number') {
             setCenter(coordinates);
+        } else {
+            // If no coordinates prop, try to get browser location
+            if ("geolocation" in navigator) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        setCenter({
+                            lat: position.coords.latitude,
+                            lng: position.coords.longitude
+                        });
+                    },
+                    (error) => {
+                        console.log("Geolocation error:", error);
+                        // Keep default center if geolocation fails
+                    }
+                );
+            }
         }
-    },[coordinates])
+    }, [coordinates]);
      
       useEffect(() => {
         if (map) {

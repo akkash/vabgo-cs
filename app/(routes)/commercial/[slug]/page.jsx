@@ -1,5 +1,4 @@
 import { createClient } from '@supabase/supabase-js';
-import Slider from '../_components/Slider';
 import ClientDetails from '../_components/ClientDetails';
 import { notFound } from 'next/navigation';
 
@@ -53,7 +52,8 @@ export async function generateStaticParams() {
 }
 
 export default async function ViewListing({ params }) {
-  const listing = await getListing(params.slug);
+  const resolvedParams = await params;
+  const listing = await getListing(resolvedParams.slug);
 
   if (!listing) {
     notFound();
@@ -61,13 +61,13 @@ export default async function ViewListing({ params }) {
 
   return (
     <div className='px-4 md:px-32 lg:px-56 py-5'>
-      <Slider imageList={listing.listingImages} />
       <ClientDetails listingDetail={listing} />
     </div>
   );
 }
 
 export async function generateMetadata({ params }) {
-  const listing = await getListing(params.slug);
+  const resolvedParams = await params;
+  const listing = await getListing(resolvedParams.slug);
   return { title: listing ? listing.title : 'Listing Not Found' };
 }
