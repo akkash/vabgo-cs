@@ -34,10 +34,10 @@ function Details({listingDetail}) {
     <div className='container mx-auto px-4 my-6 flex gap-6 flex-col max-w-7xl'>
         <div className='bg-white p-6 rounded-lg shadow-sm'>
             <div className='flex flex-col gap-2'>
-                <h1 className='font-bold text-3xl'>{listingDetail?.property_title}</h1>
+                <h1 className='font-bold text-xl text-blue-600'>{listingDetail?.property_title}</h1>
                 <div className='text-gray-600'>{listingDetail?.locality}, {listingDetail?.city}</div>
                 <div className='flex justify-between items-center mt-4'>
-                    <div className='text-2xl font-bold flex items-center gap-2'>
+                    <div className='text-xl font-bold flex items-center gap-2'>
                         <span><span className='text-primary'>₹</span> {listingDetail?.expected_price}</span>
                         <span className='text-base font-normal text-gray-500'>
                             (₹{Math.round(listingDetail?.price_per_sqft)}/sq.ft)
@@ -91,7 +91,7 @@ function Details({listingDetail}) {
         </section>
 
         <section className='bg-white p-4 md:p-6 rounded-lg shadow-sm'>
-            <h2 className='font-bold text-2xl mb-4'>Property Details</h2>
+            <h2 className='font-bold text-xl text-blue-600 mb-4'>Property Details</h2>
             <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
                 <div className='space-y-4'>
                     <div className='flex border-b pb-3'>
@@ -121,28 +121,12 @@ function Details({listingDetail}) {
                         <div className='w-1/2 text-gray-500'>Lock In Period</div>
                         <div className='w-1/2 font-medium'>{listingDetail?.lock_in_period} years</div>
                     </div>
-                    <div className='flex border-b pb-3'>
-                        <div className='w-1/2 text-gray-500'>Parking</div>
-                        <div className='w-1/2 font-medium'>{listingDetail?.parking}</div>
-                    </div>
-                    <div className='flex border-b pb-3'>
-                        <div className='w-1/2 text-gray-500'>Power Backup</div>
-                        <div className='w-1/2 font-medium'>{listingDetail?.power_backup}</div>
-                    </div>
-                    <div className='flex border-b pb-3'>
-                        <div className='w-1/2 text-gray-500'>Water Supply</div>
-                        <div className='w-1/2 font-medium'>{listingDetail?.water}</div>
-                    </div>
-                    <div className='flex border-b pb-3'>
-                        <div className='w-1/2 text-gray-500'>Security</div>
-                        <div className='w-1/2 font-medium'>{listingDetail?.security}</div>
-                    </div>
                 </div>
             </div>
         </section>
 
         <section className='bg-white p-4 md:p-6 rounded-lg shadow-sm'>
-          <h2 className='font-bold text-2xl mb-4'>About the property</h2>
+          <h2 className='font-bold text-xl text-blue-600 mb-4'>About the property</h2>
           <div>
             <div className={`relative ${!isDescriptionExpanded ? 'max-h-full' : 'max-h-[100px]'} overflow-hidden`}>
               <p className='text-gray-600 leading-relaxed'>
@@ -162,7 +146,7 @@ function Details({listingDetail}) {
         </section>
 
         <section className='bg-white p-4 md:p-6 rounded-lg shadow-sm'>
-            <h2 className='font-bold text-2xl mb-4'>Financial Details</h2>
+            <h2 className='font-bold text-xl text-blue-600 mb-4'>Financial Details</h2>
             <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
                 <div className='space-y-4'>
                     <div className='flex border-b pb-3'>
@@ -202,7 +186,55 @@ function Details({listingDetail}) {
         </section>
 
         <section className='bg-white p-4 md:p-6 rounded-lg shadow-sm'>
-            <h2 className='font-bold text-2xl mb-4'>Find On Map</h2>
+            <h2 className='font-bold text-xl text-blue-600 mb-4'>Property Features</h2>
+            <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4'>
+                <div className='flex items-center gap-2'>
+                    <CarFront size={20} className="text-gray-600" />
+                    <span className='text-gray-700'>Parking: {listingDetail?.parking}</span>
+                </div>
+                <div className='flex items-center gap-2'>
+                    <Bath size={20} className="text-gray-600" />
+                    <span className='text-gray-700'>Washroom: {listingDetail?.washroom}</span>
+                </div>
+                <div className='flex items-center gap-2'>
+                    <ArrowUpFromDot size={20} className="text-gray-600" />
+                    <span className='text-gray-700'>Lift: {listingDetail?.lift}</span>
+                </div>
+                <div className='flex items-center gap-2'>
+                    <BatteryFull size={20} className="text-gray-600" />
+                    <span className='text-gray-700'>Power Backup: {listingDetail?.power_backup}</span>
+                </div>
+                <div className='flex items-center gap-2'>
+                    <Droplet size={20} className="text-gray-600" />
+                    <span className='text-gray-700'>Water: {listingDetail?.water}</span>
+                </div>
+                <div className='flex items-center gap-2'>
+                    <ShieldBan size={20} className="text-gray-600" />
+                    <span className='text-gray-700'>Security: {listingDetail?.property_securities}</span>
+                </div>
+                <div className='flex items-center gap-2'>
+                    <ShowerHead size={20} className="text-gray-600" />
+                    <span className='text-gray-700'>AC: {listingDetail?.air_conditioning}</span>
+                </div>
+                <div className='flex items-center gap-2'>
+                    <Drill size={20} className="text-gray-600" />
+                    <span className='text-gray-700'>Oxygen Duct: {listingDetail?.oxygen_duct}</span>
+                </div>
+                <div className='flex items-center gap-2'>
+                    <Droplet size={20} className="text-gray-600" />
+                    <span className='text-gray-700'>
+                        Fire Safety: {typeof listingDetail?.fire_safety === 'string' 
+                            ? JSON.parse(listingDetail.fire_safety).join(', ')
+                            : Array.isArray(listingDetail?.fire_safety)
+                                ? listingDetail.fire_safety.join(', ')
+                                : listingDetail?.fire_safety}
+                    </span>
+                </div>
+            </div>
+        </section>
+
+        <section className='bg-white p-4 md:p-6 rounded-lg shadow-sm'>
+            <h2 className='font-bold text-xl text-blue-600 mb-4'>Find On Map</h2>
             {user ? (
                 <GoogleMapSection
                     coordinates={listingDetail.coordinates}

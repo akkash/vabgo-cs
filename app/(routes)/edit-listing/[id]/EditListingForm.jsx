@@ -1136,7 +1136,9 @@ export default function EditListingForm({ initialListing }) {
                   <h2 className='text-gray-500'>Parking</h2>
                   <div className="flex flex-wrap gap-2">
                     {[
-                      "Available",
+                      "Private Parking",
+                      "Public Parking",
+                      "Multi Level Parking",
                       "Not Available"
                     ].map((type) => (
                       <button
