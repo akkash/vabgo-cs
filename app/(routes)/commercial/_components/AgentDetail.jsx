@@ -37,14 +37,6 @@ function AgentDetail({ listingDetail }) {
 
   return (
     <div className='flex flex-col gap-5 p-5 rounded-lg shadow-md border my-6'>
-      <div className='flex items-center justify-between'>
-        <div>
-          <h2 className='text-lg font-bold'>Property Contact & Address</h2>
-        </div>
-        <Button onClick={handleGetContact}>
-          {auth && user ? 'Get Contact' : 'Sign In to Get Contact'}
-        </Button>
-      </div>
 
       <CustomDialog isOpen={isDialogOpen} onClose={() => setIsDialogOpen(false)}>
         <h3 className="text-lg font-semibold mb-4">Contact Information</h3>

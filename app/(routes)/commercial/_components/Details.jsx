@@ -1,7 +1,7 @@
 import React from 'react'
 import GoogleMapSection from '@/app/_components/GoogleMapSection'
 import { Button } from '@/components/ui/button'
-import { Bath, SquareParking, ArrowUpFromDot, Droplet, ShowerHead, ShieldBan, BatteryFull, CarFront, Drill, Home, LandPlot, MapPin, Share, Eye, ChevronDown } from 'lucide-react'
+import { Bath, SquareParking, ArrowUpFromDot, Droplet, ShowerHead, ShieldBan, BatteryFull, CarFront, Drill, Home, LandPlot, MapPin, Share, Eye, ChevronDown, X } from 'lucide-react'
 import AgentDetail from './AgentDetail'
 import { useAuth } from '@/app/contexts/AuthContext'
 import { useRouter } from 'next/navigation'
@@ -11,6 +11,7 @@ function Details({listingDetail}) {
   const { user } = useAuth();
   const router = useRouter();
   const [isDescriptionExpanded, setIsDescriptionExpanded] = React.useState(false);
+  const [isDialogOpen, setIsDialogOpen] = React.useState(false);
 
   const handleShare = async () => {
     if (navigator.share) {
@@ -29,6 +30,42 @@ function Details({listingDetail}) {
       // You might want to add a toast notification here
     }
   };
+
+  if (isDialogOpen) {
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="bg-white p-6 rounded-lg max-w-md w-full m-4">
+          <button 
+            onClick={() => setIsDialogOpen(false)} 
+            className="float-right text-gray-500 hover:text-gray-700"
+          >
+            <X className="h-6 w-6" />
+          </button>
+          
+          <h3 className="text-lg font-semibold mb-4">Contact Information</h3>
+          
+          <div className="grid gap-4">
+            <p><span className="font-semibold">Owner: </span>{listingDetail.contactname}</p>
+            <p>
+              <span className="font-semibold">Contact: </span>
+              <a href={`tel:${listingDetail.createdBy}`} className="text-blue-600 hover:underline">
+                {listingDetail.createdBy}
+              </a>
+            </p>
+            <p className="flex items-center gap-2 text-gray-500">
+              Address of Property
+              <MapPin size={18} />
+              <span>{listingDetail.address}</span>
+            </p>
+          </div>
+
+          <div className="mt-6 flex justify-center">
+            <Button onClick={() => setIsDialogOpen(false)}>Close</Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return listingDetail&&(
     <div className='container mx-auto px-4 my-6 flex gap-6 flex-col max-w-7xl'>
@@ -54,9 +91,15 @@ function Details({listingDetail}) {
                         </Button>
                         <Button 
                             className='bg-primary text-white hover:bg-primary/90'
-                            onClick={() => document.getElementById('agent-section').scrollIntoView({ behavior: 'smooth' })}
+                            onClick={() => {
+                                if (user) {
+                                    setIsDialogOpen(true);
+                                } else {
+                                    router.push('/sign-in');
+                                }
+                            }}
                         >
-                            Contact Seller
+                            {user ? 'Contact Seller' : 'Sign In to Contact Seller'}
                         </Button>
                     </div>
                 </div>
@@ -84,10 +127,6 @@ function Details({listingDetail}) {
                 <div className="font-semibold text-base md:text-lg">{listingDetail?.floor} / {listingDetail?.total_floor}</div>
                 <div className="text-gray-500 text-xs md:text-sm">Floors</div>
             </div>
-        </section>
-
-        <section id="agent-section" className='bg-white p-4 md:p-6 rounded-lg shadow-sm'>
-            <AgentDetail listingDetail={listingDetail} />
         </section>
 
         <section className='bg-white p-4 md:p-6 rounded-lg shadow-sm'>
@@ -247,6 +286,8 @@ function Details({listingDetail}) {
                 </div>
             )}
         </section>
+
+        <AgentDetail listingDetail={listingDetail} />
     </div>
   )
 }
