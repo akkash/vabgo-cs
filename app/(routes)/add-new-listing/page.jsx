@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/select";
 import { Plus } from 'lucide-react';
 import { X } from 'lucide-react';
+import { Phone } from 'lucide-react';
 
 // Define LocationSchema outside of the component
 const LocationSchema = Yup.object().shape({
@@ -131,6 +132,7 @@ function AddNewListing() {
     const supabase = createClientComponentClient();
     const [images, setImages] = useState([]);
     const [showSuccessDialog, setShowSuccessDialog] = useState(false);
+    const [showExitModal, setShowExitModal] = useState(false);
 
     useEffect(() => {
         // Check if the script is already loaded
@@ -156,6 +158,15 @@ function AddNewListing() {
                 document.head.removeChild(scriptElement);
             }
         };
+    }, []);
+
+    useEffect(() => {
+        // Show modal after 2 minutes (120000 milliseconds)
+        const timer = setTimeout(() => {
+            setShowExitModal(true);
+        }, 120000);
+
+        return () => clearTimeout(timer);
     }, []);
 
     // Add the property type mapping
@@ -1386,6 +1397,62 @@ function AddNewListing() {
                             >
                                 Go to Homepage
                             </Button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Exit Intent Modal */}
+            {showExitModal && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                    <div className="bg-white p-6 rounded-lg max-w-md w-full">
+                        <button 
+                            onClick={() => setShowExitModal(false)} 
+                            className="float-right text-gray-500 hover:text-gray-700"
+                        >
+                            <X size={24} />
+                        </button>
+                        
+                        <div className="text-center mt-4">
+                            <h2 className="text-xl font-semibold mb-2">
+                                Stuck in the form?
+                            </h2>
+                            <p className="text-gray-600 mb-6">
+                                There are other ways to upload your property
+                            </p>
+
+                            {/* Call Option */}
+                            <div className="flex items-center gap-4 mb-4 p-4 border rounded-lg">
+                                <div className="p-2 bg-blue-100 rounded-full">
+                                    <Phone className="h-6 w-6 text-blue-500" />
+                                </div>
+                                <div className="text-left">
+                                    <div className="text-sm text-gray-500">Call us on</div>
+                                    <div className="font-semibold">08048811281</div>
+                                </div>
+                            </div>
+
+                            {/* Divider */}
+                            <div className="flex items-center gap-4 my-4">
+                                <div className="flex-1 h-px bg-gray-200"></div>
+                                <div className="text-gray-500">OR</div>
+                                <div className="flex-1 h-px bg-gray-200"></div>
+                            </div>
+
+                            {/* WhatsApp Option */}
+                            <div className="flex items-center gap-4 p-4 border rounded-lg">
+                                <div className="p-2 bg-green-100 rounded-full">
+                                    <img 
+                                        src="/whatsapp-icon.png" 
+                                        alt="WhatsApp" 
+                                        className="h-6 w-6"
+                                    />
+                                </div>
+                                <div className="text-left">
+                                    <div className="text-sm text-gray-500">Scan the QR Code to</div>
+                                    <div className="font-semibold">Post Via WhatsApp</div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
