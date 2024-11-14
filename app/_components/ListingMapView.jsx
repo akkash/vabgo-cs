@@ -204,7 +204,7 @@ function ListingMapView() {
     return (
         <div className="min-h-screen pb-24">
             {/* Hero Banner Section */}
-            <div className="relative w-full h-[218px] mb-8">
+            <div className="relative w-full h-[300px] sm:h-[218px] mb-4 sm:mb-8">
                 <img 
                     src="/warehouse.jpg" 
                     alt="Find Commercial Property" 
@@ -213,16 +213,16 @@ function ListingMapView() {
                 {/* Overlay Content */}
                 <div className="absolute inset-0 bg-black/40">
                     <div className="container mx-auto h-full px-4">
-                        <div className="flex flex-col justify-center items-center h-full max-w-3xl mx-auto text-center">
-                            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">
-                            Discover the perfect space for your business
+                        <div className="flex flex-col justify-center items-center h-full max-w-3xl mx-auto text-center p-4">
+                            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-2 sm:mb-4">
+                                Discover the perfect space for your business
                             </h1>
-                            <p className="text-lg md:text-xl text-black/90">
-                                Office Space, Showrooms,  Shops,Warehouses,Godowns,Industry Buildings, Commercial Plots etc.
+                            <p className="text-sm sm:text-lg md:text-xl text-white mb-4 sm:mb-0">
+                                Office Space, Showrooms, Shops, Warehouses, Godowns, Industry Buildings, Commercial Plots etc.
                             </p>
                             
                             {/* Search Bar */}
-                            <div className="mt-6 flex gap-3 w-full max-w-2xl">
+                            <div className="mt-2 sm:mt-6 flex gap-2 sm:gap-3 w-full max-w-2xl">
                                 <div className="flex-1">
                                     <GoogleAddressSearch
                                         selectedAddress={setSearchedAddress}
@@ -238,7 +238,7 @@ function ListingMapView() {
                                         onClick={handleSearchClick}
                                     >
                                         <Search className='h-4 w-4'/> 
-                                        Search
+                                        <span className="hidden sm:inline">Search</span>
                                     </Button>
                                 )}
                             </div>
