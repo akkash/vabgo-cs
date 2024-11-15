@@ -9,7 +9,7 @@ const inter = Outfit({ subsets: ["latin"] });
 
 export const metadata = {
   title: "Vabgo - Commercial Properties",
-  description: "Discover great local Commercial Properties",
+  description: "Vabgo is a platform for finding Office Space, Showrooms, Shops, Warehouses, Godowns, Cold Storage, Industry Buildings, Commercial Plots,Commercial lands etc.",
   icons: {
     icon: '/favicon.ico',
   },

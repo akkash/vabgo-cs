@@ -215,7 +215,7 @@ function ListingMapView() {
                     <div className="container mx-auto h-full px-4">
                         <div className="flex flex-col justify-center items-center h-full max-w-3xl mx-auto text-center p-4">
                             <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-2 sm:mb-4">
-                                Discover the perfect space for your business
+                                Find the perfect space for your business
                             </h1>
                             <p className="text-sm sm:text-lg md:text-xl text-black/90 mb-4 sm:mb-0">
                                 Office Space, Showrooms, Shops, Warehouses, Godowns, Industry Buildings, Commercial Plots etc.
