@@ -217,7 +217,7 @@ function ListingMapView() {
                             <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-2 sm:mb-4">
                                 Discover the perfect space for your business
                             </h1>
-                            <p className="text-sm sm:text-lg md:text-xl text-white mb-4 sm:mb-0">
+                            <p className="text-sm sm:text-lg md:text-xl text-black/90 mb-4 sm:mb-0">
                                 Office Space, Showrooms, Shops, Warehouses, Godowns, Industry Buildings, Commercial Plots etc.
                             </p>
                             
