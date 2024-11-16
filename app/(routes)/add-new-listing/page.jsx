@@ -231,7 +231,7 @@ function AddNewListing() {
                 .from('listing')
                 .insert([
                     {
-                        property_title,
+                        property_title: title,
                         slug,
                         address: values.address,
                         contactname: values.contactname,
