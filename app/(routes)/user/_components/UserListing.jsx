@@ -108,7 +108,7 @@ function UserListing() {
                                 className='rounded-lg object-cover h-[170px]'
                             />
                             <div className='flex mt-2 flex-col gap-2'>
-                                <h2 className='font-bold text-xl'>${item?.property_title}</h2>
+                                <h2 className='font-bold text-xl'>{item?.property_title}</h2>
                                 <h2 className='flex gap-2 text-sm text-gray-400 '>
                                     <MapPin className='h-4 w-4' />
                                     {item.price}</h2>

@@ -292,7 +292,6 @@ function AddNewListing() {
                             {
                                 listing_id: listingData[0].id,
                                 image_url: image.url,
-                                image_path: image.path,
                                 is_primary: index === 0 // First image is primary
                             }
                         ]);
