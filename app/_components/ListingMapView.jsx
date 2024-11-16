@@ -214,10 +214,10 @@ function ListingMapView() {
                 <div className="absolute inset-0 bg-black/40">
                     <div className="container mx-auto h-full px-4">
                         <div className="flex flex-col justify-center items-center h-full max-w-3xl mx-auto text-center p-4">
-                            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-2 sm:mb-4">
+                            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-2 sm:mb-4 drop-shadow-lg text-shadow">
                                 Find the perfect space for your business
                             </h1>
-                            <p className="text-sm sm:text-lg md:text-xl text-black/90 mb-4 sm:mb-0">
+                            <p className="text-sm sm:text-lg md:text-xl text-black-600 mb-4 sm:mb-0 drop-shadow-lg text-shadow">
                                 Office Space, Showrooms, Shops, Warehouses, Godowns, Industry Buildings, Commercial Plots etc.
                             </p>
                             
@@ -341,13 +341,13 @@ function ListingMapView() {
                                                     <div className="flex items-center gap-4 text-sm text-gray-600">
                                                             <span>{item.property_type}</span>
                                                             <span>•</span>
-                                                            <span>Built-up Area: {item.built_up_area ? (typeof item.built_up_area === 'number' ? item.built_up_area.toLocaleString() : item.built_up_area) : 'N/A'} sqft</span>
-                                                            <span>•</span>
-                                                            <span>Carpet Area: {item.carpet_area ? (typeof item.carpet_area === 'number' ? item.carpet_area.toLocaleString() : item.carpet_area) : 'N/A'} sqft</span>
-                                                        </div>
+                                                            <span>Carpet Area: {item.carpet_area ? (typeof item.carpet_area === 'number' ? item.carpet_area.toLocaleString() : item.carpet_area) : 'N/A'} {item.carpet_area_type}</span>
+                                                            
+                                                    </div>
 
                                                         <div className="text-sm text-gray-600">
-                                                            <div>{item.address}</div>
+                                                            <div>{item.sub_locality}{item.sub_locality && ','}</div>
+                                                            {item.locality !== item.city && <div>{item.locality},</div>}
                                                             <div>{item.city}</div>
                                                         </div>
                                               

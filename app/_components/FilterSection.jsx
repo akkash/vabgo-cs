@@ -15,12 +15,17 @@ function FilterSection({
     sortBy,
     onSort,
     onClearFilters,
+    defaultFilters,
 }) {
     return (
         <div className="w-full min-h-[65px] bg-white border-b">
             <div className="flex items-center p-3 overflow-x-auto whitespace-nowrap scrollbar-hide">
                 <div className="flex gap-2">
-                    <Select onValueChange={onSort} className="min-w-[100px]">
+                    <Select 
+                        onValueChange={onSort} 
+                        defaultValue={sortBy}
+                        className="min-w-[100px]"
+                    >
                         <SelectTrigger className="h-9 px-4 bg-transparent hover:bg-gray-50 border rounded-full">
                             <SelectValue placeholder="Sort" />
                         </SelectTrigger>
@@ -46,7 +51,10 @@ function FilterSection({
                         </SelectContent>
                     </Select>
 
-                    <Select onValueChange={setListingType}>
+                    <Select 
+                        onValueChange={setListingType}
+                        defaultValue={defaultFilters?.listing_type || ""}
+                    >
                         <SelectTrigger className="h-9 px-4 bg-transparent hover:bg-gray-50 border rounded-full">
                             <SelectValue placeholder="Listing Type" />
                         </SelectTrigger>
@@ -62,7 +70,10 @@ function FilterSection({
                         </SelectContent>
                     </Select>
 
-                    <Select onValueChange={setPropertyType}>
+                    <Select 
+                        onValueChange={setPropertyType}
+                        defaultValue={defaultFilters?.property_type || ""}
+                    >
                         <SelectTrigger className="h-9 px-4 bg-transparent hover:bg-gray-50 border rounded-full">
                             <SelectValue placeholder="Property Type" />
                         </SelectTrigger>

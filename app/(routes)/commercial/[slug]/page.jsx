@@ -69,5 +69,5 @@ export default async function ViewListing({ params }) {
 export async function generateMetadata({ params }) {
   const resolvedParams = await params;
   const listing = await getListing(resolvedParams.slug);
-  return { title: listing ? listing.title : 'Listing Not Found' };
+  return { title: listing ? listing.property_title : 'Listing Not Found' };
 }
