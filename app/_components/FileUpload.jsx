@@ -1,15 +1,94 @@
 import React from 'react'
 import { Upload } from 'lucide-react'
 import Image from 'next/image'
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import { toast } from 'sonner'
 
 function FileUpload({ setImages, imageList }) {
-  const handleFileChange = (e) => {
+  const supabase = createClientComponentClient()
+
+  const handleFileChange = async (e) => {
     const files = Array.from(e.target.files);
-    setImages(prevImages => [...prevImages, ...files]);
+    
+    // Validate file size and type
+    const validFiles = files.filter(file => {
+      const isValidType = file.type.startsWith('image/');
+      const isValidSize = file.size <= 5 * 1024 * 1024; // 5MB limit
+      
+      if (!isValidType) toast.error(`${file.name} is not an image file`);
+      if (!isValidSize) toast.error(`${file.name} is too large (max 5MB)`);
+      
+      return isValidType && isValidSize;
+    });
+
+    if (validFiles.length === 0) return;
+
+    try {
+      const uploadPromises = validFiles.map(async (file) => {
+        // Create a unique file path
+        const fileExt = file.name.split('.').pop();
+        const fileName = `${Math.random()}-${Date.now()}.${fileExt}`;
+        const filePath = `property-images/${fileName}`;
+
+        // Upload to Supabase storage
+        const { error: uploadError } = await supabase.storage
+          .from('listings')  // Your bucket name
+          .upload(filePath, file);
+
+        if (uploadError) throw uploadError;
+
+        // Get the public URL
+        const { data: { publicUrl } } = supabase.storage
+          .from('listings')  // Your bucket name
+          .getPublicUrl(filePath);
+
+        return {
+          url: publicUrl,
+          name: file.name
+        };
+      });
+
+      // Show loading toast
+      const loadingToast = toast.loading('Uploading images...');
+
+      // Wait for all uploads to complete
+      const uploadedFiles = await Promise.all(uploadPromises);
+      
+      // Update images state with new URLs
+      setImages(prevImages => [...prevImages, ...uploadedFiles]);
+      
+      // Dismiss loading toast and show success
+      toast.dismiss(loadingToast);
+      toast.success('Images uploaded successfully');
+
+    } catch (error) {
+      console.error('Error uploading files:', error);
+      toast.error('Failed to upload images');
+    }
   }
 
-  const handleRemoveImage = (index) => {
-    setImages(prevImages => prevImages.filter((_, i) => i !== index));
+  const handleRemoveImage = async (index) => {
+    try {
+      const imageToRemove = imageList[index];
+      
+      // If the image has a URL, extract the file path and delete from storage
+      if (imageToRemove?.url) {
+        const filePath = imageToRemove.url.split('/').pop();
+        
+        const { error } = await supabase.storage
+          .from('listings')  // Your bucket name
+          .remove([`property-images/${filePath}`]);
+
+        if (error) throw error;
+      }
+
+      // Remove from state
+      setImages(prevImages => prevImages.filter((_, i) => i !== index));
+      
+    } catch (error) {
+      console.error('Error removing image:', error);
+      toast.error('Failed to remove image');
+    }
   }
 
   return (
@@ -32,7 +111,7 @@ function FileUpload({ setImages, imageList }) {
           {imageList.map((image, index) => (
             <div key={index} className="relative">
               <Image 
-                src={image?.url || URL.createObjectURL(image)} 
+                src={image.url} 
                 width={100} 
                 height={100}
                 alt={`Uploaded image ${index + 1}`}
