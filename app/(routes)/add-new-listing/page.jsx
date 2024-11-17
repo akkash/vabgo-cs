@@ -286,23 +286,38 @@ function AddNewListing() {
             // If we have images and the listing was created successfully, insert the images
             if (images.length > 0 && listingData?.[0]?.id) {
                 const imageInsertPromises = images.map(async (image, index) => {
-                    const { data: imageData, error: imageError } = await supabase
-                        .from('listingImages')
-                        .insert([
-                            {
-                                listing_id: listingData[0].id,
-                                url: image.url
-                            }
-                        ]);
-
-                    if (imageError) {
-                        console.error('Error inserting image:', imageError);
+                    // Skip if image URL is not available
+                    if (!image.url) {
+                        console.warn('Skipping image insert - URL not available:', image);
                         return null;
                     }
-                    return imageData;
+
+                    try {
+                        const { data: imageData, error: imageError } = await supabase
+                            .from('listingImages')
+                            .insert([
+                                {
+                                    listing_id: listingData[0].id,
+                                    url: image.url,
+                                    order: index // Optionally add order if you want to maintain image sequence
+                                }
+                            ]);
+
+                        if (imageError) {
+                            console.error('Error inserting image:', imageError);
+                            return null;
+                        }
+                        return imageData;
+                    } catch (error) {
+                        console.error('Failed to insert image:', error);
+                        return null;
+                    }
                 });
 
-                await Promise.all(imageInsertPromises);
+                // Wait for all valid images to be inserted
+                const results = await Promise.all(imageInsertPromises);
+                const successfulInserts = results.filter(Boolean);
+                console.log(`Successfully inserted ${successfulInserts.length} of ${images.length} images`);
             }
 
             setLoader(false);
