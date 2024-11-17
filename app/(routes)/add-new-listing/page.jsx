@@ -204,6 +204,15 @@ function AddNewListing() {
 
     const nextHandler = async (values) => {
         setLoader(true);
+        
+        // Validate images before proceeding
+        const validImages = images.filter(image => image.url && typeof image.url === 'string');
+        if (images.length > 0 && validImages.length === 0) {
+            setLoader(false);
+            toast.error("Failed to process images. Please try uploading them again.");
+            return;
+        }
+
         let coordinates = null;
         if (values.latitude && values.longitude) {
             coordinates = {
@@ -283,15 +292,9 @@ function AddNewListing() {
                 return;
             }
 
-            // If we have images and the listing was created successfully, insert the images
-            if (images.length > 0 && listingData?.[0]?.id) {
-                const imageInsertPromises = images.map(async (image, index) => {
-                    // Skip if image URL is not available
-                    if (!image.url) {
-                        console.warn('Skipping image insert - URL not available:', image);
-                        return null;
-                    }
-
+            // If we have valid images and the listing was created successfully, insert the images
+            if (validImages.length > 0 && listingData?.[0]?.id) {
+                const imageInsertPromises = validImages.map(async (image, index) => {
                     try {
                         const { data: imageData, error: imageError } = await supabase
                             .from('listingImages')
@@ -299,7 +302,7 @@ function AddNewListing() {
                                 {
                                     listing_id: listingData[0].id,
                                     url: image.url,
-                                    order: index // Optionally add order if you want to maintain image sequence
+                                    order: index
                                 }
                             ]);
 
@@ -317,7 +320,12 @@ function AddNewListing() {
                 // Wait for all valid images to be inserted
                 const results = await Promise.all(imageInsertPromises);
                 const successfulInserts = results.filter(Boolean);
-                console.log(`Successfully inserted ${successfulInserts.length} of ${images.length} images`);
+                console.log(`Successfully inserted ${successfulInserts.length} of ${validImages.length} images`);
+
+                // Show warning if some images failed to upload
+                if (successfulInserts.length < validImages.length) {
+                    toast.warning("Some images failed to upload");
+                }
             }
 
             setLoader(false);
