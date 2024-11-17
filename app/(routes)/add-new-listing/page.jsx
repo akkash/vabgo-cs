@@ -291,8 +291,7 @@ function AddNewListing() {
                         .insert([
                             {
                                 listing_id: listingData[0].id,
-                                url: image.url,
-                                is_primary: index === 0
+                                url: image.url
                             }
                         ]);
 
