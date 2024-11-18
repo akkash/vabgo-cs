@@ -22,36 +22,6 @@ function FilterSection({
             <div className="flex items-center p-3 overflow-x-auto whitespace-nowrap scrollbar-hide">
                 <div className="flex gap-2">
                     <Select 
-                        onValueChange={onSort} 
-                        defaultValue={sortBy}
-                        className="min-w-[100px]"
-                    >
-                        <SelectTrigger className="h-9 px-4 bg-transparent hover:bg-gray-50 border rounded-full">
-                            <SelectValue placeholder="Sort" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="newest">
-                                <span className="flex gap-2">Newest First</span>
-                            </SelectItem>
-                            <SelectItem value="oldest">
-                                <span className="flex gap-2">Oldest First</span>
-                            </SelectItem>
-                            <SelectItem value="price-asc">
-                                <span className="flex gap-2">Lowest Price</span>
-                            </SelectItem>
-                            <SelectItem value="price-desc">
-                                <span className="flex gap-2">Highest Price</span>
-                            </SelectItem>
-                            <SelectItem value="area-asc">
-                                <span className="flex gap-2">Lowest Area</span>
-                            </SelectItem>
-                            <SelectItem value="area-desc">
-                                <span className="flex gap-2">Highest Area</span>
-                            </SelectItem>
-                        </SelectContent>
-                    </Select>
-
-                    <Select 
                         onValueChange={setListingType}
                         defaultValue={defaultFilters?.listing_type || ""}
                     >
@@ -101,6 +71,36 @@ function FilterSection({
                             <SelectItem value="Others">
                                 <h2 className='flex gap-2'>
                                      <LandPlot className='h-5 w-5 text-primary'/>Others</h2>
+                            </SelectItem>
+                        </SelectContent>
+                    </Select>
+
+                    <Select 
+                        onValueChange={onSort} 
+                        defaultValue={sortBy}
+                        className="min-w-[100px]"
+                    >
+                        <SelectTrigger className="h-9 px-4 bg-transparent hover:bg-gray-50 border rounded-full">
+                            <SelectValue placeholder="Sort" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="newest">
+                                <span className="flex gap-2">Newest First</span>
+                            </SelectItem>
+                            <SelectItem value="oldest">
+                                <span className="flex gap-2">Oldest First</span>
+                            </SelectItem>
+                            <SelectItem value="price-asc">
+                                <span className="flex gap-2">Lowest Price</span>
+                            </SelectItem>
+                            <SelectItem value="price-desc">
+                                <span className="flex gap-2">Highest Price</span>
+                            </SelectItem>
+                            <SelectItem value="area-asc">
+                                <span className="flex gap-2">Lowest Area</span>
+                            </SelectItem>
+                            <SelectItem value="area-desc">
+                                <span className="flex gap-2">Highest Area</span>
                             </SelectItem>
                         </SelectContent>
                     </Select>

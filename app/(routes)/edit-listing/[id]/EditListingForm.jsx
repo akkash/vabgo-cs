@@ -580,6 +580,8 @@ export default function EditListingForm({ initialListing }) {
                 </div>
 
 
+
+
                                                 {/* Latitude */}
                                                 <div className='flex gap-2 flex-col max-w-[300px]'>
                   <h2 className='text-gray-500'>Latitude</h2>
@@ -636,17 +638,16 @@ export default function EditListingForm({ initialListing }) {
                   />
                 </div>
 
-
                 {/* City */}
                 <div className='flex gap-2 flex-col max-w-[300px]'>
                   <h2 className='text-gray-500'>City</h2>
                   <Input 
                     type="text" 
-                    placeholder="Erode" 
-                    onChange={handleChange} 
+                    placeholder="City will be auto-filled" 
                     value={values.city} 
                     name="city"
-                    className="w-[300px]"
+                    className="w-[300px] bg-gray-50"
+                    disabled
                   />
                 </div>
 
@@ -655,11 +656,11 @@ export default function EditListingForm({ initialListing }) {
                   <h2 className='text-gray-500'>Locality</h2>
                   <Input 
                     type="text" 
-                    placeholder="Erode" 
-                    onChange={handleChange} 
+                    placeholder="Locality will be auto-filled" 
                     value={values.locality} 
                     name="locality"
-                    className="w-[300px]"
+                    className="w-[300px] bg-gray-50"
+                    disabled
                   />
                 </div>
 
@@ -668,11 +669,11 @@ export default function EditListingForm({ initialListing }) {
                   <h2 className='text-gray-500'>Sub Locality</h2>
                   <Input 
                     type="text" 
-                    placeholder="Erode" 
-                    onChange={handleChange} 
+                    placeholder="Sub-locality will be auto-filled" 
                     value={values.sub_locality} 
                     name="sub_locality"
-                    className="w-[300px]"
+                    className="w-[300px] bg-gray-50"
+                    disabled
                   />
                 </div>
 

@@ -756,11 +756,12 @@ function AddNewListing() {
                                         <h2 className='text-gray-500'>City</h2>
                                         <Input 
                                             type="text" 
-                                            placeholder="Enter city name" 
-                                            onChange={handleChange} 
+                                            placeholder="City will be auto-filled from coordinates" 
                                             value={values.city} 
                                             name="city"
-                                            className="w-[300px]"
+                                            className="w-[300px] bg-gray-50"
+                                            disabled
+                                            readOnly
                                         />
                                     </div>
 
@@ -769,11 +770,12 @@ function AddNewListing() {
                                         <h2 className='text-gray-500'>Locality</h2>
                                         <Input 
                                             type="text" 
-                                            placeholder="Enter locality" 
-                                            onChange={handleChange} 
+                                            placeholder="Locality will be auto-filled from coordinates" 
                                             value={values.locality} 
                                             name="locality"
-                                            className="w-[300px]"
+                                            className="w-[300px] bg-gray-50"
+                                            disabled
+                                            readOnly
                                         />
                                     </div>
 
@@ -782,11 +784,12 @@ function AddNewListing() {
                                         <h2 className='text-gray-500'>Sub Locality</h2>
                                         <Input 
                                             type="text" 
-                                            placeholder="Enter sub locality" 
-                                            onChange={handleChange} 
+                                            placeholder="Sub-locality will be auto-filled from coordinates" 
                                             value={values.sub_locality} 
                                             name="sub_locality"
-                                            className="w-[300px]"
+                                            className="w-[300px] bg-gray-50"
+                                            disabled
+                                            readOnly
                                         />
                                     </div>
                                 </div>
