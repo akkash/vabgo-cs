@@ -947,6 +947,93 @@ function AddNewListing() {
                                     
                                 </div>
 
+                                                                {/* Additional Details */}
+                                                                <div className='mb-8'>
+                                    <h3 className='text-2xl font-semibold mb-6'>Additional Details</h3>
+                                    <div className='grid grid-cols-1 gap-6'>
+                                        {/* Lock In Period */}
+                                        <div className='flex gap-2 flex-col max-w-[300px]'>
+                                            <h2 className='text-gray-500'>Lock In Period</h2>
+                                            <Input 
+                                                type="number" 
+                                                placeholder="Ex.1 Year" 
+                                                name="lock_in_period" 
+                                                onChange={handleChange} 
+                                                value={values.lock_in_period}
+                                                className="w-[300px]"
+                                            />
+                                        </div>
+
+                                        {/* Age of Property */}
+                                        <div className='flex gap-2 flex-col'>
+                                            <h2 className='text-gray-500'>Age Of Property</h2>
+                                            <div className="flex flex-wrap gap-2">
+                                                {[
+                                                    "Under Construction",
+                                                    "Less than a Year",
+                                                    "1 to 5 Year",
+                                                    "5 to 10 Year",
+                                                    "More than 10 Year"
+                                                ].map((type) => (
+                                                    <button
+                                                        key={type}
+                                                        type="button"
+                                                        className={`px-4 py-2 rounded-md ${
+                                                            values.age_of_property === type
+                                                                ? 'bg-primary text-white'
+                                                                : 'bg-gray-100 hover:bg-gray-200'
+                                                        }`}
+                                                        onClick={() => setFieldValue('age_of_property', type)}
+                                                    >
+                                                        {type}
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        </div>
+
+                                        {/* Floor */}
+                                        <div className='flex gap-2 flex-col max-w-[300px]'>
+                                            <h2 className='text-gray-500'>Floor</h2>
+                                            <Select onValueChange={(e) => setFieldValue('floor', e)} value={values.floor}>
+                                                <SelectTrigger className="w-[300px]">
+                                                    <SelectValue placeholder="Select Floor" />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    <SelectItem value="Lower Basement">Lower Basement</SelectItem>
+                                                    <SelectItem value="Upper Basement">Upper Basement</SelectItem>
+                                                    <SelectItem value="Ground">Ground</SelectItem>
+                                                    <SelectItem value="Full Building">Full Building</SelectItem>
+                                                    {[...Array(18)].map((_, i) => (
+                                                        <SelectItem key={i} value={(i + 1).toString()}>{i + 1}</SelectItem>
+                                                    ))}
+                                                </SelectContent>
+                                            </Select>
+                                        </div>
+
+                                        {/* Total Floor */}
+                                        <div className='flex gap-2 flex-col max-w-[300px]'>
+                                            <h2 className='text-gray-500'>Total Floor</h2>
+                                            <Select 
+                                                onValueChange={(e) => setFieldValue('total_floor', e)} 
+                                                value={values.total_floor}
+                                            >
+                                                <SelectTrigger className="w-[300px]">
+                                                    <SelectValue placeholder="Select Total Floor" />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    <SelectItem value="Lower Basement">Lower Basement</SelectItem>
+                                                    <SelectItem value="Upper Basement">Upper Basement</SelectItem>
+                                                    <SelectItem value="Ground">Ground</SelectItem>
+                                                    <SelectItem value="Full Building">Full Building</SelectItem>
+                                                    {[...Array(18)].map((_, i) => (
+                                                        <SelectItem key={i} value={(i + 1).toString()}>{i + 1}</SelectItem>
+                                                    ))}
+                                                </SelectContent>
+                                            </Select>
+                                        </div>
+                                    </div>
+                                </div>
+
                                 {/* Price Details */}
                                 <div className='mb-8'>
                                     <h3 className='text-2xl font-semibold mb-6'>Price Details</h3>
@@ -1352,92 +1439,7 @@ function AddNewListing() {
                                     </div>
                                 </div>
 
-                                {/* Additional Details */}
-                                <div className='mb-8'>
-                                    <h3 className='text-2xl font-semibold mb-6'>Additional Details</h3>
-                                    <div className='grid grid-cols-1 gap-6'>
-                                        {/* Lock In Period */}
-                                        <div className='flex gap-2 flex-col max-w-[300px]'>
-                                            <h2 className='text-gray-500'>Lock In Period</h2>
-                                            <Input 
-                                                type="number" 
-                                                placeholder="Ex.1 Year" 
-                                                name="lock_in_period" 
-                                                onChange={handleChange} 
-                                                value={values.lock_in_period}
-                                                className="w-[300px]"
-                                            />
-                                        </div>
 
-                                        {/* Age of Property */}
-                                        <div className='flex gap-2 flex-col'>
-                                            <h2 className='text-gray-500'>Age Of Property</h2>
-                                            <div className="flex flex-wrap gap-2">
-                                                {[
-                                                    "Under Construction",
-                                                    "Less than a Year",
-                                                    "1 to 5 Year",
-                                                    "5 to 10 Year",
-                                                    "More than 10 Year"
-                                                ].map((type) => (
-                                                    <button
-                                                        key={type}
-                                                        type="button"
-                                                        className={`px-4 py-2 rounded-md ${
-                                                            values.age_of_property === type
-                                                                ? 'bg-primary text-white'
-                                                                : 'bg-gray-100 hover:bg-gray-200'
-                                                        }`}
-                                                        onClick={() => setFieldValue('age_of_property', type)}
-                                                    >
-                                                        {type}
-                                                    </button>
-                                                ))}
-                                            </div>
-                                        </div>
-
-                                        {/* Floor */}
-                                        <div className='flex gap-2 flex-col max-w-[300px]'>
-                                            <h2 className='text-gray-500'>Floor</h2>
-                                            <Select onValueChange={(e) => setFieldValue('floor', e)} value={values.floor}>
-                                                <SelectTrigger className="w-[300px]">
-                                                    <SelectValue placeholder="Select Floor" />
-                                                </SelectTrigger>
-                                                <SelectContent>
-                                                    <SelectItem value="Lower Basement">Lower Basement</SelectItem>
-                                                    <SelectItem value="Upper Basement">Upper Basement</SelectItem>
-                                                    <SelectItem value="Ground">Ground</SelectItem>
-                                                    <SelectItem value="Full Building">Full Building</SelectItem>
-                                                    {[...Array(18)].map((_, i) => (
-                                                        <SelectItem key={i} value={(i + 1).toString()}>{i + 1}</SelectItem>
-                                                    ))}
-                                                </SelectContent>
-                                            </Select>
-                                        </div>
-
-                                        {/* Total Floor */}
-                                        <div className='flex gap-2 flex-col max-w-[300px]'>
-                                            <h2 className='text-gray-500'>Total Floor</h2>
-                                            <Select 
-                                                onValueChange={(e) => setFieldValue('total_floor', e)} 
-                                                value={values.total_floor}
-                                            >
-                                                <SelectTrigger className="w-[300px]">
-                                                    <SelectValue placeholder="Select Total Floor" />
-                                                </SelectTrigger>
-                                                <SelectContent>
-                                                    <SelectItem value="Lower Basement">Lower Basement</SelectItem>
-                                                    <SelectItem value="Upper Basement">Upper Basement</SelectItem>
-                                                    <SelectItem value="Ground">Ground</SelectItem>
-                                                    <SelectItem value="Full Building">Full Building</SelectItem>
-                                                    {[...Array(18)].map((_, i) => (
-                                                        <SelectItem key={i} value={(i + 1).toString()}>{i + 1}</SelectItem>
-                                                    ))}
-                                                </SelectContent>
-                                            </Select>
-                                        </div>
-                                    </div>
-                                </div>
 
                                 {/* Image Upload */}
                                 <div className='mb-8'>
@@ -1549,7 +1551,7 @@ function AddNewListing() {
                                 </div>
                                 <div className="text-left">
                                     <div className="text-sm text-gray-500">Call us on</div>
-                                    <div className="font-semibold">08048811281</div>
+                                    <div className="font-semibold">+91-9677602828</div>
                                 </div>
                             </div>
 
