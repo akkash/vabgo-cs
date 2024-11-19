@@ -86,10 +86,15 @@ export default function EditListingForm({ initialListing }) {
     if (values.listing_type) {
       parts.push("for", values.listing_type);
     }
+
+    // Add property_advantage
+    if (values.property_advantage) {
+      parts.push("in", values.property_advantage);
+    }
     
     // Add location
     if (values.sub_locality || values.locality || values.city) {
-      parts.push("in");
+      parts.push(",");
       if (values.sub_locality) {
         // If sub_locality exists, use sub_locality and city
         parts.push(values.sub_locality);
@@ -125,10 +130,15 @@ export default function EditListingForm({ initialListing }) {
     if (values.listing_type) {
       parts.push("for", values.listing_type);
     }
+
+    // Add property_advantage
+    if (values.property_advantage) {
+      parts.push("in", values.property_advantage);
+    }
     
     // Add location
     if (values.sub_locality || values.locality || values.city) {
-      parts.push("in");
+      parts.push(",");
       if (values.sub_locality) {
         // If sub_locality exists, use sub_locality and city
         parts.push(values.sub_locality);
@@ -178,6 +188,7 @@ export default function EditListingForm({ initialListing }) {
         'locality',
         'city',
         'sub_locality',
+        'property_advantage',
         'carpet_area',
         'carpet_area_type'
       ].some(field => values[field] !== initialListing[field]);
@@ -378,6 +389,7 @@ export default function EditListingForm({ initialListing }) {
       <Formik
         initialValues={{
           listing_type: initialListing.listing_type || '',
+          property_advantage: initialListing.property_advantage|| '',
           city: initialListing.city || '',
           locality: initialListing.locality || '',
           sub_locality: initialListing.sub_locality || '',
@@ -638,16 +650,29 @@ export default function EditListingForm({ initialListing }) {
                   />
                 </div>
 
+                
+                {/* property_advantage */}
+                <div className='flex gap-2 flex-col max-w-[300px]'>
+                  <h2 className='text-gray-500'>Property Advantage</h2>
+                  <Input 
+                    type="text" 
+                    placeholder="NH / Main Road / Corner location" 
+                    value={values.property_advantage} 
+                    name="property_advantage"
+                  />
+                </div>
+
                 {/* City */}
                 <div className='flex gap-2 flex-col max-w-[300px]'>
                   <h2 className='text-gray-500'>City</h2>
                   <Input 
                     type="text" 
-                    placeholder="City will be auto-filled" 
+                    placeholder="City will be auto-filled from coordinates" 
                     value={values.city} 
                     name="city"
                     className="w-[300px] bg-gray-50"
                     disabled
+                    readOnly
                   />
                 </div>
 

@@ -445,6 +445,7 @@ function AddNewListing() {
                             location_type: '',
                             property_ownership: '',
                             description: '',
+                            property_advantage: '',
                             city: '',
                             locality: '',
                             sub_locality: '',
@@ -750,6 +751,18 @@ function AddNewListing() {
                                             className="w-[300px]"
                                         />
                                     </div>
+
+                                    {/* property_advantage */}
+                                    <div className='flex gap-2 flex-col max-w-[300px]'>
+                                        <h2 className='text-gray-500'>Property Advantage</h2>
+                                        <Input 
+                                            type="text" 
+                                            placeholder="NH / Main Road / Corner location" 
+                                            value={values.property_advantage} 
+                                            name="property_advantage"
+                                        />
+                                    </div>
+                                    
 
                                     {/* City */}
                                     <div className='flex gap-2 flex-col max-w-[300px]'>
