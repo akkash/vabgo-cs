@@ -1367,6 +1367,16 @@ export default function EditListingForm({ initialListing }) {
                 />
               </div>
 
+              {/* Image Display */}
+              <div className="mt-4">
+                <h2 className='font-lg text-gray-500 my-2'>Uploaded Images</h2>
+                <div className="flex flex-wrap gap-4">
+                  {images.map((image, index) => (
+                    <img key={index} src={URL.createObjectURL(image)} alt={`Uploaded Image ${index + 1}`} className="w-32 h-32 object-cover rounded-md" />
+                  ))}
+                </div>
+              </div>
+
               
 
               {/* Submit Button */}

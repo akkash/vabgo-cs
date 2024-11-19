@@ -1466,6 +1466,23 @@ function AddNewListing() {
                                     />
                                 </div>
 
+                                {/* Display Uploaded Images if any */}
+                                {images.length > 0 && (
+                                    <div className='mb-8'>
+                                        <h2 className='font-lg text-gray-500 my-2'>Uploaded Images</h2>
+                                        <div className="grid grid-cols-2 gap-4">
+                                            {images.map((image, index) => (
+                                                <img 
+                                                    key={index} 
+                                                    src={image.url} 
+                                                    alt={`Uploaded Image ${index + 1}`} 
+                                                    className="w-full h-auto rounded-md"
+                                                />
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+
                                 <div className='flex justify-between'>
                                     <Button 
                                         type="submit" 
