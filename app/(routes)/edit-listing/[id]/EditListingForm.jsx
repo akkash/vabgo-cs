@@ -23,9 +23,34 @@ import { Plus } from 'lucide-react'
 
 export default function EditListingForm({ initialListing }) {
   const router = useRouter();
-  const [images, setImages] = useState(initialListing.listingImages || []);
+  const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(false);
   const supabase = createClientComponentClient()
+
+  // Fetch images from the listingImages table based on listing_id
+  useEffect(() => {
+    const fetchImages = async () => {
+      setLoading(true);
+      try {
+        const { data, error } = await supabase
+          .from('listingImages')
+          .select('url')
+          .eq('listing_id', initialListing.id);
+
+        if (error) throw error;
+
+        setImages(data); // Set the fetched images
+      } catch (error) {
+        console.error('Error fetching images:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (initialListing.id) {
+      fetchImages();
+    }
+  }, [initialListing.id, supabase]);
 
   // Extract coordinates from initialListing
   const initialLatitude = initialListing.coordinates?.lat || '';
@@ -389,7 +414,7 @@ export default function EditListingForm({ initialListing }) {
       <Formik
         initialValues={{
           listing_type: initialListing.listing_type || '',
-          property_advantage: initialListing.property_advantage|| '',
+          property_advantage: initialListing.property_advantage || '',
           city: initialListing.city || '',
           locality: initialListing.locality || '',
           sub_locality: initialListing.sub_locality || '',
@@ -659,6 +684,7 @@ export default function EditListingForm({ initialListing }) {
                     placeholder="NH / Main Road / Corner location" 
                     value={values.property_advantage} 
                     name="property_advantage"
+                    onChange={handleChange}
                   />
                 </div>
 
@@ -1365,19 +1391,21 @@ export default function EditListingForm({ initialListing }) {
                   setImages={(value) => setImages(value)}
                   imageList={images}
                 />
-              </div>
+              </div>         
 
               {/* Image Display */}
               <div className="mt-4">
                 <h2 className='font-lg text-gray-500 my-2'>Uploaded Images</h2>
                 <div className="flex flex-wrap gap-4">
-                  {images.map((image, index) => (
-                    <img key={index} src={URL.createObjectURL(image)} alt={`Uploaded Image ${index + 1}`} className="w-32 h-32 object-cover rounded-md" />
-                  ))}
+                  {images.length > 0 ? (
+                    images.map((image, index) => (
+                      <img key={index} src={image.url} alt={`Uploaded Image ${index + 1}`} className="w-32 h-32 object-cover rounded-md" />
+                    ))
+                  ) : (
+                    <p>No images uploaded.</p> // Optional: Message when no images are available
+                  )}
                 </div>
               </div>
-
-              
 
               {/* Submit Button */}
               <div className='flex gap-7 justify-end'>
