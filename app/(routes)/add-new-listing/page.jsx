@@ -1584,7 +1584,9 @@ function AddNewListing() {
                                 </div>
                                 <div className="text-left">
                                     <div className="text-sm text-gray-500">Call us on</div>
-                                    <div className="font-semibold">+91-9677602828</div>
+                                    <div className="font-semibold">
+                                        <a href="tel:+919677602828" className="text-blue-500 hover:underline">+91-9677602828</a>
+                                    </div>
                                 </div>
                             </div>
 

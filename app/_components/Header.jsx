@@ -4,7 +4,7 @@ import { Plus } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-import React from 'react'
+import React, { useState } from 'react'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,6 +19,7 @@ function Header() {
   const path = usePathname();
   const router = useRouter();
   const { user, supabase } = useAuth();
+  const [showDialog, setShowDialog] = useState(false);
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
@@ -27,9 +28,19 @@ function Header() {
 
   const handleListProperty = () => {
     if (user) {
-      router.push('/add-new-listing');
+      setShowDialog(true);
     } else {
       router.push('/sign-in');
+    }
+  }
+
+  const handleOptionSelect = (option) => {
+    setShowDialog(false);
+    if (option === 'whatsapp') {
+      // Redirect to WhatsApp link
+      window.open('https://wa.me/919884406828', '_blank'); // Open WhatsApp chat
+    } else {
+      router.push('/add-new-listing');
     }
   }
 
@@ -71,6 +82,19 @@ function Header() {
           </Link>
         )}
       </div>
+      {showDialog && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg max-w-md w-full">
+            <h2 className="text-lg font-semibold mb-4">Choose an Option</h2>
+            <button onClick={() => handleOptionSelect('whatsapp')} className="block w-full text-center bg-blue-500 text-white py-2 rounded mb-2">
+              Add Property Through WhatsApp
+            </button>
+            <button onClick={() => handleOptionSelect('page')} className="block w-full text-center bg-green-500 text-white py-2 rounded">
+              Using @page.jsx
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
