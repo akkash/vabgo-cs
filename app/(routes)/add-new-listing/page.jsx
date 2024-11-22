@@ -775,6 +775,7 @@ function AddNewListing() {
                                             className="w-[300px] bg-gray-50"
                                             disabled
                                             readOnly
+                                            onChange={(e) => setFieldValue('city', e.target.value)}
                                         />
                                     </div>
 
@@ -789,6 +790,7 @@ function AddNewListing() {
                                             className="w-[300px] bg-gray-50"
                                             disabled
                                             readOnly
+                                            onChange={(e) => setFieldValue('locality', e.target.value)}
                                         />
                                     </div>
 
@@ -803,6 +805,7 @@ function AddNewListing() {
                                             className="w-[300px] bg-gray-50"
                                             disabled
                                             readOnly
+                                            onChange={(e) => setFieldValue('sub_locality', e.target.value)}
                                         />
                                     </div>
                                 </div>
@@ -1601,7 +1604,7 @@ function AddNewListing() {
                             <div className="flex items-center gap-4 p-4 border rounded-lg">
                                 <div className="p-2 bg-green-100 rounded-full">
                                     <img 
-                                        src="/whatsapp-icon.png" 
+                                        src="/whatsapp_icon.png" 
                                         alt="WhatsApp" 
                                         className="h-6 w-6"
                                     />

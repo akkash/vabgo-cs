@@ -1,6 +1,6 @@
 "use client"
 import { Button } from '@/components/ui/button'
-import { Plus } from 'lucide-react'
+import { Plus, Phone } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
@@ -38,7 +38,7 @@ function Header() {
     setShowDialog(false);
     if (option === 'whatsapp') {
       // Redirect to WhatsApp link
-      window.open('https://wa.me/919884406828', '_blank'); // Open WhatsApp chat
+      window.open('https://wa.me/919677602828', '_blank'); // Open WhatsApp chat
     } else {
       router.push('/add-new-listing');
     }
@@ -86,12 +86,46 @@ function Header() {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg max-w-md w-full">
             <h2 className="text-lg font-semibold mb-4">Choose an Option</h2>
-            <button onClick={() => handleOptionSelect('whatsapp')} className="block w-full text-center bg-blue-500 text-white py-2 rounded mb-2">
-              Add Property Through WhatsApp
-            </button>
-            <button onClick={() => handleOptionSelect('page')} className="block w-full text-center bg-green-500 text-white py-2 rounded">
-              Using @page.jsx
-            </button>
+
+            <div className="flex items-center gap-4 mb-4 p-4 border rounded-lg">
+              <div onClick={() => handleOptionSelect('page')} className="block w-full text-center bg-blue-500 text-white py-2 rounded cursor-pointer">
+                Add Your Property
+              </div>
+            </div>
+
+            <div className="flex justify-center mb-4">
+              <span>or</span>
+            </div>
+            
+            <div className="flex items-center gap-4 mb-4 p-4 border rounded-lg">
+              <div className="p-2 bg-blue-100 rounded-full">
+                <Phone className="h-6 w-6 text-blue-500" />
+              </div>
+              <div className="text-left">
+                <div className="text-sm text-gray-500">Call us on</div>
+                <div className="font-semibold">
+                  <a href="tel:+919677602828" className="text-blue-500 hover:underline">+91-9677602828</a>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex justify-center mb-4">
+              <span>or</span>
+            </div>
+            
+            <div className="flex items-center gap-4 p-4 border rounded-lg">
+              <div className="p-2 bg-green-100 rounded-full">
+                <img 
+                  src="/whatsapp_icon.png" 
+                  alt="WhatsApp" 
+                  className="h-6 w-6"
+                />
+              </div>
+              <div className="text-left">
+                <div className="text-sm text-gray-500">Scan the QR Code to</div>
+                <div className="font-semibold">Post Via WhatsApp</div>
+              </div>
+            </div>
           </div>
         </div>
       )}
