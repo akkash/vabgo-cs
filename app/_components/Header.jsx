@@ -95,7 +95,7 @@ function Header() {
                 <path d="m6 6 12 12"></path>
               </svg>
             </button>
-            <h2 className="text-lg font-semibold mb-4">Choose an Option</h2>
+            <h2 className="text-lg font-semibold mb-4">Take the Next Step</h2>
 
             <div className="flex items-center gap-4 mb-4 p-4 border rounded-lg">
               <div onClick={() => handleOptionSelect('page')} className="block w-full text-center bg-blue-500 text-white py-2 rounded cursor-pointer">
@@ -111,7 +111,7 @@ function Header() {
               <div className="p-2 bg-blue-100 rounded-full">
                 <Phone className="h-6 w-6 text-blue-500" />
               </div>
-              <div className="text-left">
+              <div className="text-center">
                 <div className="text-sm text-gray-500">Call us on</div>
                 <div className="font-semibold">
                   <a href="tel:+919677602828" className="text-blue-500 hover:underline">+91-9677602828</a>
@@ -131,7 +131,7 @@ function Header() {
                   className="h-6 w-6"
                 />
               </div>
-              <div className="text-left">
+              <div className="text-center">
                 <div className="text-sm text-gray-500">Scan the QR Code to</div>
                 <div className="font-semibold">Post Via WhatsApp</div>
               </div>
