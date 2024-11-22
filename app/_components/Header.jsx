@@ -55,7 +55,7 @@ function Header() {
       </div>
       <div className='flex gap-2 items-center'>
         <Button className="flex gap-2" onClick={handleListProperty}>
-          <Plus className='h-5 w-5' /> List Your Property
+          <Plus className='h-5 w-5' /> List Your Property @ 199₹
         </Button>
         {user ? (
           <DropdownMenu>
