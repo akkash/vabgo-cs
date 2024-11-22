@@ -14,6 +14,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { useAuth } from '../contexts/AuthContext'
+import { X } from 'lucide-react';
 
 function Header() {
   const path = usePathname();
@@ -85,6 +86,15 @@ function Header() {
       {showDialog && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg max-w-md w-full">
+          <button 
+              onClick={() => setShowDialog(false)} 
+              className="absolute top-4 right-4 text-red-500 hover:text-red-700"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-x">
+                <path d="M18 6 6 18"></path>
+                <path d="m6 6 12 12"></path>
+              </svg>
+            </button>
             <h2 className="text-lg font-semibold mb-4">Choose an Option</h2>
 
             <div className="flex items-center gap-4 mb-4 p-4 border rounded-lg">
